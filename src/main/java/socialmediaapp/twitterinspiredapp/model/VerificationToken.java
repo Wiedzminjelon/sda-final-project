@@ -7,7 +7,6 @@ import java.time.Instant;
 
 @Entity
 @NoArgsConstructor
-//@Table(name = "token")
 public class VerificationToken {
 
     @Id

@@ -25,13 +25,11 @@ public class Post {
     private String url;
 
     @Nullable
-//    @Lob
     private String description;
 
     private Integer voteCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
 
     private Instant createDate;
