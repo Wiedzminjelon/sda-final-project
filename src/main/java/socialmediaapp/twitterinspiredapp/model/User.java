@@ -38,4 +38,5 @@ public class User {
     private boolean enabled;
     private ACCOUNT_TYPE account_type;
 
+
 }
