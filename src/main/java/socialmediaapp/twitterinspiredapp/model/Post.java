@@ -2,6 +2,7 @@ package socialmediaapp.twitterinspiredapp.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
@@ -13,6 +14,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Data
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

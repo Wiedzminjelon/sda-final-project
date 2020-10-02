@@ -14,6 +14,7 @@ import socialmediaapp.twitterinspiredapp.repository.VerificationTokenRepository;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -34,17 +35,20 @@ public class AuthService {
         user.setAccount_type(ACCOUNT_TYPE.PRIVATE);
         user.setCreated(Instant.now());
         user.setEnabled(true);
+
         userRepository.save(user);
         generateVerificationToken(user);
     }
 
+    public Optional<User> getUserById(Long userId){
+        return userRepository.findById(userId);
+    }
 
     private String generateVerificationToken(User user) {
         String token = UUID.randomUUID().toString();
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setUser(user);
         verificationToken.setToken(token);
-
         verificationTokenRepository.save(verificationToken);
         return token;
     }
@@ -62,4 +66,5 @@ public class AuthService {
     private boolean userExist(String username){
         return userRepository.findByUsername(username) != null;
     }
+
 }

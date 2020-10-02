@@ -22,4 +22,5 @@ public class AuthController {
             authService.signup(registerRequest);
             return new ResponseEntity<>("User registration successful", HttpStatus.CREATED);
     }
+
 }
