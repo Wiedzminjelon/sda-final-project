@@ -29,7 +29,6 @@ public class CommentService {
     public void save (CommentsDto commentsDto) {
         Post post = postRepository.findById(commentsDto.getPostId())
                 .orElseThrow(() -> new PostNotFoundException(commentsDto.getPostId().toString()));
-
     }
 
     public List<CommentsDto> getAllCommentsForPost(Long postId) {
@@ -39,7 +38,7 @@ public class CommentService {
     }
 
     public List<CommentsDto> getAllCommentForUser(String userName) {
-         User user = userRepository.findByUsername(userName).orElseThrow(() -> new UsernameNotFoundException(userName));
+         User user = userRepository.findByUsername(userName);
          return (List<CommentsDto>) commentRepository.findAllByUser(user)
                  .stream();
 

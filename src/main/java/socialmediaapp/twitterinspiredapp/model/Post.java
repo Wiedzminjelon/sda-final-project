@@ -2,6 +2,7 @@ package socialmediaapp.twitterinspiredapp.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
@@ -9,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.Instant;
 
+@Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,8 +30,6 @@ public class Post {
     private String description;
 
     private Integer voteCount;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;

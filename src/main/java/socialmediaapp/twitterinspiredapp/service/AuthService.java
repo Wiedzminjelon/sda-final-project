@@ -34,6 +34,7 @@ public class AuthService {
         user.setAccount_type(ACCOUNT_TYPE.PRIVATE);
         user.setCreated(Instant.now());
         user.setEnabled(true);
+
         userRepository.save(user);
         generateVerificationToken(user);
     }
@@ -56,7 +57,7 @@ public class AuthService {
     }
 
     private boolean emailExist(String email) {
-        return userRepository.findByEmail(email) != null;
+        return userRepository.findByEmail(email).isPresent();
     }
 
     private boolean userExist(String username){

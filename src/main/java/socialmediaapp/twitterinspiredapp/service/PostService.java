@@ -11,6 +11,7 @@ import socialmediaapp.twitterinspiredapp.model.User;
 import socialmediaapp.twitterinspiredapp.repository.PostRepository;
 import socialmediaapp.twitterinspiredapp.repository.UserRepository;
 
+import java.time.Instant;
 import java.util.stream.Stream;
 
 @Service
@@ -23,20 +24,28 @@ public class PostService {
 
 
 
-    public void save (PostsDto postsDto) {
-        Post post = postRepository.findById(postsDto.getPostId())
-                .orElseThrow(() -> new PostNotFoundException(postsDto.getPostId().toString()));
+    public Post save (PostsDto postsDto) {
+        Post post = new Post();
 
+        post.setPostName(postsDto.getPostName());
+        post.setUrl(postsDto.getUrl());
+        post.setDescription(postsDto.getDescription());
+        post.setVoteCount(0);
+        post.setUser(userRepository.findByUsername(postsDto.getUserName()));
+        post.setCreatedDate(Instant.now());
+
+        postRepository.save(post);
+        return post;
     }
 
-    public Stream<Post> getAllPostsForPost(Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(postId.toString()));
-        return postRepository.findByPost(post)
-                .stream();
-    }
+//    public Stream<Post> getAllPostsForPost(Long postId) {
+//        Post post = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(postId.toString()));
+//        return postRepository.findByPost(post)
+//                .stream();
+//    }
 
     public Stream<Post> getAllPostsForUser(String userName) {
-        User user = userRepository.findByUsername(userName).orElseThrow(() -> new UsernameNotFoundException(userName));
+        User user = userRepository.findByUsername(userName);
         return  postRepository.findAllByUser(user)
                 .stream();
 
