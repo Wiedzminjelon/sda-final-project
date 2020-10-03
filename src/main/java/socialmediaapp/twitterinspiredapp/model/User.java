@@ -5,10 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import socialmediaapp.twitterinspiredapp.enums.ACCOUNT_TYPE;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -37,6 +34,8 @@ public class User {
     private Instant created;
     private boolean enabled;
     private ACCOUNT_TYPE account_type;
+
+
 
 
 }

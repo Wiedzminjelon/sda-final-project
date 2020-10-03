@@ -13,6 +13,7 @@ import socialmediaapp.twitterinspiredapp.repository.CommentRepository;
 import socialmediaapp.twitterinspiredapp.repository.PostRepository;
 import socialmediaapp.twitterinspiredapp.repository.UserRepository;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 @Service
@@ -31,15 +32,15 @@ public class CommentService {
 
     }
 
-    public Stream<Comment> getAllCommentsForPost(Long postId) {
+    public List<CommentsDto> getAllCommentsForPost(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(postId.toString()));
-        return commentRepository.findByPost(post)
+        return (List<CommentsDto>) commentRepository.findByPost(post)
                 .stream();
     }
 
-    public Stream<Comment> getAllCommentForUser(String userName) {
+    public List<CommentsDto> getAllCommentForUser(String userName) {
          User user = userRepository.findByUsername(userName).orElseThrow(() -> new UsernameNotFoundException(userName));
-         return  commentRepository.findAllByUser(user)
+         return (List<CommentsDto>) commentRepository.findAllByUser(user)
                  .stream();
 
 

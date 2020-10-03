@@ -28,9 +28,11 @@ public class Post {
     private String description;
 
     private Integer voteCount;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    private Instant createDate;
+    private Instant createdDate;
 }
