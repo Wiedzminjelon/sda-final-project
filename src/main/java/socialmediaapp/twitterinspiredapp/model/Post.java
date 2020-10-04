@@ -11,10 +11,10 @@ import javax.validation.constraints.NotBlank;
 import java.time.Instant;
 
 @Data
-@Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,4 +35,5 @@ public class Post {
     private User user;
 
     private Instant createdDate;
+
 }

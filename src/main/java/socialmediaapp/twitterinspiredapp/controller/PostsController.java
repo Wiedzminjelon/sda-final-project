@@ -1,39 +1,39 @@
 package socialmediaapp.twitterinspiredapp.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.boot.actuate.trace.http.HttpTrace;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import socialmediaapp.twitterinspiredapp.dto.PostsDto;
-import socialmediaapp.twitterinspiredapp.model.Post;
+import socialmediaapp.twitterinspiredapp.dto.PostRequest;
+import socialmediaapp.twitterinspiredapp.dto.PostResponse;
 import socialmediaapp.twitterinspiredapp.service.PostService;
 
-import java.util.stream.Stream;
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
-@RequestMapping("/api/posts/")
+@RequestMapping("/api/posts")
 @AllArgsConstructor
 public class PostsController {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity createPost(@RequestBody PostsDto postsDto) {
-        postService.save(postsDto);
-        return new ResponseEntity(CREATED);
+    public ResponseEntity<String> createPost(@RequestBody PostRequest postRequest) {
+        postService.save(postRequest);
+        return new ResponseEntity("Post added successfully!", CREATED);
     }
-//    @GetMapping(" /by-post/{postId}")
-//    public ResponseEntity<Stream<Post>> getAllPostsForPost(@PathVariable Long postId) {
-//        return ResponseEntity.status(OK)
-//                .body(postService.getAllPostsForPost(postId));
-//
-//    }
-    @GetMapping("/by-user/{userName}")
-    public ResponseEntity<Stream<Post>> getAllPostsForUser(@PathVariable String userName) {
-        return ResponseEntity.status(OK)
-                .body(postService.getAllPostsForUser(userName));
 
+    @GetMapping("/all")
+    public ResponseEntity<List<PostResponse>> getAllPosts() {
+        return new ResponseEntity<>(postService.getAllPosts(), OK);
     }
+
+    @GetMapping("/all-by-user/{username}")
+    public ResponseEntity<List<PostResponse>> getAllPostsForUser(@PathVariable String username) {
+        return new ResponseEntity<>(postService.getAllPostsForUser(username), OK);
+    }
+
 }
