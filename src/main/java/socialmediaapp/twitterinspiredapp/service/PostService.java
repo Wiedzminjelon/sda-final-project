@@ -42,8 +42,6 @@ public class PostService {
 
 
 
-
-
     private Post mapPostRequestToPost(PostRequest postRequest) {
         return Post.builder()
                 .postName(postRequest.getPostName())
@@ -52,23 +50,6 @@ public class PostService {
                 .createdDate(Instant.now())
                 .url(postRequest.getUrl())
                 .user(userRepository.findByUsername(postRequest.getUserName()))
-                .build();
-    }
-
-    private PostResponse postRequestToPostResponse(PostRequest postRequest) {
-        return PostResponse.builder()
-                .postName(postRequest.getPostName())
-                .description(postRequest.getDescription())
-                .url(postRequest.getUrl())
-                .userName(postRequest.getUserName())
-                .build();
-    }
-
-    private static PostResponse mapToPostResponse(PostRequest postRequest) {
-        return PostResponse.builder()
-                .postName(postRequest.getPostName())
-                .description(postRequest.getDescription())
-                .url(postRequest.getUrl())
                 .build();
     }
 

@@ -26,7 +26,7 @@ public class Post {
     @Nullable
     private String url;
 
-    @Nullable
+    @NotBlank
     private String description;
 
     private Integer voteCount;

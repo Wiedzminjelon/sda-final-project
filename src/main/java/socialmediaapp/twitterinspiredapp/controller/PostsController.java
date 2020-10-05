@@ -36,4 +36,7 @@ public class PostsController {
         return new ResponseEntity<>(postService.getAllPostsForUser(username), OK);
     }
 
+
+
+
 }
