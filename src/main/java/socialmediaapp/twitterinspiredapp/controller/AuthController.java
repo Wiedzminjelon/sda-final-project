@@ -19,7 +19,13 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody @Valid RegisterRequest registerRequest) {
-            authService.signup(registerRequest);
-            return new ResponseEntity<>("User registration successful", HttpStatus.CREATED);
+        authService.signup(registerRequest);
+        return new ResponseEntity<>("User registration successful", HttpStatus.CREATED);
+    }
+
+    @GetMapping("/accountVerification/{token}")
+    public ResponseEntity<String> verifyAccount(@PathVariable String token) {
+        authService.verifyAccount(token);
+        return new ResponseEntity<>("Account activation successfully!", HttpStatus.OK);
     }
 }

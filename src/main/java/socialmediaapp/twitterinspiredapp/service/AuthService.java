@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import socialmediaapp.twitterinspiredapp.dto.RegisterRequest;
 import socialmediaapp.twitterinspiredapp.enums.ACCOUNT_TYPE;
+import socialmediaapp.twitterinspiredapp.exceptions.SpringTwitterException;
+import socialmediaapp.twitterinspiredapp.model.NotificationEmail;
 import socialmediaapp.twitterinspiredapp.model.User;
 import socialmediaapp.twitterinspiredapp.model.VerificationToken;
 import socialmediaapp.twitterinspiredapp.repository.UserRepository;
@@ -14,6 +16,7 @@ import socialmediaapp.twitterinspiredapp.repository.VerificationTokenRepository;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -22,6 +25,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final VerificationTokenRepository verificationTokenRepository;
+    private final MailService mailService;
 
     @Transactional
     public void signup(RegisterRequest registerRequest) {
@@ -34,10 +38,12 @@ public class AuthService {
         user.setAccount_type(ACCOUNT_TYPE.PRIVATE);
         user.setCreated(Instant.now());
         user.setEnabled(true);
-        userRepository.save(user);
-        generateVerificationToken(user);
-    }
 
+        userRepository.save(user);
+        String token = generateVerificationToken(user);
+        mailService.sendMail(new NotificationEmail("Please activate your account", "" + user.getEmail(),
+                "Please click this link to activate your account:" + "http:localhost:8080/auth/accountVerification/" + token));
+    }
 
     private String generateVerificationToken(User user) {
         String token = UUID.randomUUID().toString();
@@ -49,9 +55,9 @@ public class AuthService {
         return token;
     }
 
-    private void userAndEmailValidator(RegisterRequest registerRequest){
+    private void userAndEmailValidator(RegisterRequest registerRequest) {
         if (emailExist(registerRequest.getEmail()) || userExist(registerRequest.getUsername())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT,"User with this username or email exists!");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User with this username or email exists!");
         }
     }
 
@@ -59,7 +65,23 @@ public class AuthService {
         return userRepository.findByEmail(email) != null;
     }
 
-    private boolean userExist(String username){
-        return userRepository.findByUsername(username) != null;
+    private boolean userExist(String username) {
+        return userRepository.findByUsername(username).isPresent();
     }
+
+    public void verifyAccount(String token) {
+        Optional<VerificationToken> verificationToken = verificationTokenRepository.findByToken(token);
+        verificationToken.orElseThrow(() -> new SpringTwitterException("Invalid Token"));
+        fetchUserAndEnable(verificationToken.get());
+    }
+
+    private void fetchUserAndEnable(VerificationToken verificationToken) {
+        String username = verificationToken.getUser().getUsername();
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new SpringTwitterException("User with " + username + "not found"));
+        user.setEnabled(true);
+        userRepository.save(user);
+    }
+
+
 }
+
