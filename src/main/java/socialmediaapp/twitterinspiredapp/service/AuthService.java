@@ -61,6 +61,6 @@ public class AuthService {
     }
 
     private boolean userExist(String username){
-        return userRepository.findByUsername(username) != null;
+        return userRepository.findByUsername(username).isPresent();
     }
 }

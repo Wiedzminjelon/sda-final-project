@@ -1,11 +1,14 @@
 package socialmediaapp.twitterinspiredapp.service;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import socialmediaapp.twitterinspiredapp.dto.PostRequest;
 
 import socialmediaapp.twitterinspiredapp.dto.PostResponse;
 import socialmediaapp.twitterinspiredapp.model.Post;
+import socialmediaapp.twitterinspiredapp.model.User;
 import socialmediaapp.twitterinspiredapp.repository.PostRepository;
 import socialmediaapp.twitterinspiredapp.repository.UserRepository;
 
@@ -23,6 +26,9 @@ public class PostService {
 
     @Transactional
     public void save(PostRequest postRequest) {
+        String userName = postRequest.getUserName();
+        userRepository.findByUsername(userName).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found!"));
         postRepository.save(mapPostRequestToPost(postRequest));
     }
 
@@ -41,7 +47,6 @@ public class PostService {
     }
 
 
-
     private Post mapPostRequestToPost(PostRequest postRequest) {
         return Post.builder()
                 .postName(postRequest.getPostName())
@@ -49,7 +54,7 @@ public class PostService {
                 .voteCount(0)
                 .createdDate(Instant.now())
                 .url(postRequest.getUrl())
-                .user(userRepository.findByUsername(postRequest.getUserName()))
+                .user(userRepository.findByUsername(postRequest.getUserName()).orElse(new User()))
                 .build();
     }
 
