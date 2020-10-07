@@ -2,6 +2,7 @@ package socialmediaapp.twitterinspiredapp.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
@@ -9,10 +10,11 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.Instant;
 
-@Entity
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 @Builder
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +26,7 @@ public class Post {
     @Nullable
     private String url;
 
-    @Nullable
+    @NotBlank
     private String description;
 
     private Integer voteCount;
@@ -32,5 +34,6 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    private Instant createDate;
+    private Instant createdDate;
+
 }

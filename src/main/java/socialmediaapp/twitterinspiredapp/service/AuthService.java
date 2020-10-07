@@ -24,7 +24,7 @@ public class AuthService {
     private final VerificationTokenRepository verificationTokenRepository;
 
     @Transactional
-    public void signup(RegisterRequest registerRequest) {
+    public User signup(RegisterRequest registerRequest) {
         userAndEmailValidator(registerRequest);
 
         User user = new User();
@@ -34,8 +34,10 @@ public class AuthService {
         user.setAccount_type(ACCOUNT_TYPE.PRIVATE);
         user.setCreated(Instant.now());
         user.setEnabled(true);
+
         userRepository.save(user);
         generateVerificationToken(user);
+        return user;
     }
 
 
@@ -56,10 +58,10 @@ public class AuthService {
     }
 
     private boolean emailExist(String email) {
-        return userRepository.findByEmail(email) != null;
+        return userRepository.findByEmail(email).isPresent();
     }
 
     private boolean userExist(String username){
-        return userRepository.findByUsername(username) != null;
+        return userRepository.findByUsername(username).isPresent();
     }
 }
