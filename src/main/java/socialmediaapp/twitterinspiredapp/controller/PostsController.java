@@ -3,9 +3,7 @@ package socialmediaapp.twitterinspiredapp.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import socialmediaapp.twitterinspiredapp.dto.PostRequest;
-import socialmediaapp.twitterinspiredapp.dto.PostResponse;
-import socialmediaapp.twitterinspiredapp.model.Post;
+import socialmediaapp.twitterinspiredapp.dto.PostDto;
 import socialmediaapp.twitterinspiredapp.service.PostService;
 
 import java.util.List;
@@ -20,18 +18,17 @@ public class PostsController {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<Post> createPost(@RequestBody PostRequest postRequest) {
-        postService.save(postRequest);
-        return new ResponseEntity<>(CREATED);
+    public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto) {
+        return new ResponseEntity<>(postService.save(postDto),CREATED);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<PostResponse>> getAllPosts() {
+    public ResponseEntity<List<PostDto>> getAllPosts() {
         return new ResponseEntity<>(postService.getAllPosts(), OK);
     }
 
     @GetMapping("/all-by-user/{username}")
-    public ResponseEntity<List<PostResponse>> getAllPostsForUser(@PathVariable String username) {
+    public ResponseEntity<List<PostDto>> getAllPostsForUser(@PathVariable String username) {
         return new ResponseEntity<>(postService.getAllPostsForUser(username), OK);
     }
 
