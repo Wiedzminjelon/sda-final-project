@@ -3,7 +3,6 @@ package socialmediaapp.twitterinspiredapp.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import socialmediaapp.twitterinspiredapp.dto.CommentDto;
-import socialmediaapp.twitterinspiredapp.dto.CommentResponse;
 import socialmediaapp.twitterinspiredapp.exceptions.PostNotFoundException;
 
 import socialmediaapp.twitterinspiredapp.exceptions.SpringTwitterException;
@@ -25,27 +24,27 @@ public class CommentService {
     private final AuthService authService;
     private final CommentRepository commentRepository;
 
-    public Comment save(CommentDto commentDto) {
+    public CommentDto save(CommentDto commentDto) {
         postRepository.findById(commentDto.getPostId())
                 .orElseThrow(() -> new PostNotFoundException("Post not found!"));
         Comment comment = mapCommentDtoToComment(commentDto);
         commentRepository.save(comment);
-        return comment;
+        return commentDto;
     }
 
-    public List<CommentResponse> getAllCommentsForPost(Long postId) {
-        Post post = postRepository.findById(postId).
-                orElseThrow(() -> new PostNotFoundException("Post not Found!"));
+    public List<CommentDto> getAllCommentsForPost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException("Post not Found!"));
         return commentRepository.findByPost(post)
                 .stream()
-                .map(CommentService::mapCommentToCommentResponse)
+                .map(this::mapCommentToCommentDto)
                 .collect(Collectors.toList());
     }
 
-    public List<CommentResponse> getAllCommentForUser(String username) {
+    public List<CommentDto> getAllCommentForUser(String username) {
         return commentRepository.getAllByUser_Username(username)
                 .stream()
-                .map(CommentService::mapCommentToCommentResponse)
+                .map(this::mapCommentToCommentDto)
                 .collect(Collectors.toList());
     }
 
@@ -53,13 +52,15 @@ public class CommentService {
         return Comment.builder()
                 .text(commentDto.getText())
                 .createdDate(Instant.now())
-                .user(userRepository.findByUsername(commentDto.getUserName()).orElseThrow(()-> new SpringTwitterException("User not found!")))
-                .post(postRepository.findById(commentDto.getPostId()).orElseThrow(()->new SpringTwitterException("post not found!")))
+                .user(userRepository.findByUsername(commentDto.getUserName()).orElseThrow(() -> new SpringTwitterException("User not found!")))
+                .post(postRepository.findById(commentDto.getPostId()).orElseThrow(() -> new SpringTwitterException("Post not found!")))
                 .build();
     }
 
-    static CommentResponse mapCommentToCommentResponse(Comment comment) {
-        return CommentResponse.builder()
+    private CommentDto mapCommentToCommentDto(Comment comment) {
+        return CommentDto.builder()
+                .id(comment.getId())
+                .postId(comment.getPost().getPostId())
                 .text(comment.getText())
                 .userName(comment.getUser().getUsername())
                 .build();

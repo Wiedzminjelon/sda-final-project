@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 @Value
 @Builder
 @AllArgsConstructor
-public class PostResponse {
+public class PostDto {
 
      Long id;
 
