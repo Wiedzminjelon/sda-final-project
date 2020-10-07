@@ -7,8 +7,8 @@ import org.springframework.web.server.ResponseStatusException;
 import socialmediaapp.twitterinspiredapp.dto.PostRequest;
 
 import socialmediaapp.twitterinspiredapp.dto.PostResponse;
+import socialmediaapp.twitterinspiredapp.exceptions.SpringTwitterException;
 import socialmediaapp.twitterinspiredapp.model.Post;
-import socialmediaapp.twitterinspiredapp.model.User;
 import socialmediaapp.twitterinspiredapp.repository.PostRepository;
 import socialmediaapp.twitterinspiredapp.repository.UserRepository;
 
@@ -25,11 +25,12 @@ public class PostService {
     private final AuthService authService;
 
     @Transactional
-    public void save(PostRequest postRequest) {
-        String userName = postRequest.getUserName();
-        userRepository.findByUsername(userName).
-                orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found!"));
-        postRepository.save(mapPostRequestToPost(postRequest));
+    public Post save(PostRequest postRequest) {
+        userRepository.findByUsername(postRequest.getUserName()).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.OK, "User not found!"));
+        Post post = mapPostRequestToPost(postRequest);
+        postRepository.save(post);
+        return post;
     }
 
     public List<PostResponse> getAllPosts() {
@@ -54,7 +55,8 @@ public class PostService {
                 .voteCount(0)
                 .createdDate(Instant.now())
                 .url(postRequest.getUrl())
-                .user(userRepository.findByUsername(postRequest.getUserName()).orElse(new User()))
+                .user(userRepository.findByUsername(postRequest.getUserName())
+                        .orElseThrow(() -> new SpringTwitterException("User not found!")))
                 .build();
     }
 

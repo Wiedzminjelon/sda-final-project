@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import socialmediaapp.twitterinspiredapp.dto.CommentDto;
 import socialmediaapp.twitterinspiredapp.dto.CommentResponse;
+import socialmediaapp.twitterinspiredapp.model.Comment;
 import socialmediaapp.twitterinspiredapp.service.CommentService;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -19,9 +20,9 @@ public class CommentsController {
     private final CommentService commentService;
 
     @PostMapping("/")
-    public ResponseEntity<String> createComment(@RequestBody CommentDto commentDto) {
+    public ResponseEntity<Comment> createComment(@RequestBody CommentDto commentDto) {
         commentService.save(commentDto);
-        return new ResponseEntity<>("Comment added!",CREATED);
+        return new ResponseEntity<>(CREATED);
     }
     @GetMapping("/by-post/{postId}")
     public ResponseEntity<List<CommentResponse>> getAllCommentsForPost(@PathVariable Long postId) {

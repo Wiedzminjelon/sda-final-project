@@ -25,10 +25,12 @@ public class CommentService {
     private final AuthService authService;
     private final CommentRepository commentRepository;
 
-    public void save(CommentDto commentDto) {
+    public Comment save(CommentDto commentDto) {
         postRepository.findById(commentDto.getPostId())
                 .orElseThrow(() -> new PostNotFoundException("Post not found!"));
-        commentRepository.save(mapCommentDtoToComment(commentDto));
+        Comment comment = mapCommentDtoToComment(commentDto);
+        commentRepository.save(comment);
+        return comment;
     }
 
     public List<CommentResponse> getAllCommentsForPost(Long postId) {

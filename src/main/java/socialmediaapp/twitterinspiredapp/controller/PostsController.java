@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import socialmediaapp.twitterinspiredapp.dto.PostRequest;
 import socialmediaapp.twitterinspiredapp.dto.PostResponse;
+import socialmediaapp.twitterinspiredapp.model.Post;
 import socialmediaapp.twitterinspiredapp.service.PostService;
 
 import java.util.List;
@@ -19,9 +20,9 @@ public class PostsController {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<String> createPost(@RequestBody PostRequest postRequest) {
+    public ResponseEntity<Post> createPost(@RequestBody PostRequest postRequest) {
         postService.save(postRequest);
-        return new ResponseEntity("Post added successfully!", CREATED);
+        return new ResponseEntity<>(CREATED);
     }
 
     @GetMapping("/all")
