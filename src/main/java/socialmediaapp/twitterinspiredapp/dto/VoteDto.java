@@ -11,4 +11,5 @@ import socialmediaapp.twitterinspiredapp.enums.VOTE_TYPE;
 public class VoteDto {
     private VOTE_TYPE vote_type;
     private Long postId;
+    private Long userId;
 }
