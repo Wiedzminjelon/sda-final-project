@@ -3,6 +3,7 @@ package socialmediaapp.twitterinspiredapp.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import socialmediaapp.twitterinspiredapp.enums.ACCOUNT_STATUS;
 import socialmediaapp.twitterinspiredapp.enums.ACCOUNT_TYPE;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.time.Instant;
+import java.util.List;
 
 @Entity
 @Data
@@ -33,10 +35,16 @@ public class User {
 
     private Instant created;
     private boolean enabled;
+
+    @Enumerated(EnumType.STRING)
     private ACCOUNT_TYPE account_type;
 
+    @Enumerated(EnumType.STRING)
+    private ACCOUNT_STATUS account_status;
 
+    @OneToMany
+    private List<Followers> followers;
 
-
-
+    @OneToMany
+    private List<Followers> following;
 }
