@@ -3,16 +3,19 @@ package socialmediaapp.twitterinspiredapp.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import socialmediaapp.twitterinspiredapp.enums.VOTE_TYPE;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Data
 public class Vote {
 
     @Id
@@ -29,5 +32,6 @@ public class Vote {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
+    private Instant createDate;
 
 }
