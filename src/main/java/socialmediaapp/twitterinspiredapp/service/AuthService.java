@@ -27,15 +27,21 @@ public class AuthService {
     private final VerificationTokenRepository verificationTokenRepository;
     private final MailService mailService;
 
+    public AuthService(PasswordEncoder passwordEncoder, UserRepository userRepository, VerificationTokenRepository verificationTokenRepository) {
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+        this.verificationTokenRepository = verificationTokenRepository;
+    }
+
     @Transactional
-    public void signup(RegisterRequest registerRequest) {
+    public User signup(RegisterRequest registerRequest) {
         userAndEmailValidator(registerRequest);
 
         User user = new User();
         user.setUsername(registerRequest.getUsername());
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setAccount_type(ACCOUNT_TYPE.PRIVATE);
+        user.setAccountType(ACCOUNT_TYPE.PRIVATE);
         user.setCreated(Instant.now());
         user.setEnabled(true);
 
@@ -45,12 +51,15 @@ public class AuthService {
                 "Please click this link to activate your account:" + "http:localhost:8080/auth/accountVerification/" + token));
     }
 
+    public Optional<User> getUserById(Long userId){
+        return userRepository.findById(userId);
+    }
+
     private String generateVerificationToken(User user) {
         String token = UUID.randomUUID().toString();
         VerificationToken verificationToken = new VerificationToken();
         verificationToken.setUser(user);
         verificationToken.setToken(token);
-
         verificationTokenRepository.save(verificationToken);
         return token;
     }
@@ -62,7 +71,7 @@ public class AuthService {
     }
 
     private boolean emailExist(String email) {
-        return userRepository.findByEmail(email) != null;
+        return userRepository.findByEmail(email).isPresent();
     }
 
     private boolean userExist(String username) {

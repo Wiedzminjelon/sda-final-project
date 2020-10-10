@@ -6,29 +6,25 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import java.time.Instant;
 
-@Data
-@Builder
 @Entity
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
-public class Comment {
+@NoArgsConstructor
+@Builder
+public class Follow {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty
-    private String text;
+    @ManyToOne
+    private User following;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Post post;
+    @ManyToOne
+    private User followed;
 
-    private Instant createdDate;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private Instant followDate;
 
 }
