@@ -2,8 +2,10 @@ package socialmediaapp.twitterinspiredapp.service;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import socialmediaapp.twitterinspiredapp.dto.FollowDto;
 import socialmediaapp.twitterinspiredapp.exceptions.SpringTwitterException;
 import socialmediaapp.twitterinspiredapp.model.Follow;
@@ -28,6 +30,10 @@ public class FollowService {
         User followingUser = userRepository.findByUsername(followDto.getFollowingUserName()).orElseThrow();
         User followedUser = userRepository.findByUsername(followDto.getFollowedUserName()).orElseThrow();
 
+        if (followedUser.equals(followingUser)){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "You cannot follow yourself!" );
+        }
+
         followedUser.getFollowers().add(followingUser);
         followingUser.getFollowing().add(followedUser);
 
@@ -42,6 +48,16 @@ public class FollowService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
 
         return followRepository.findAllByFollowed_UserId(user.getUserId())
+                .stream()
+                .map(this::mapFollowToFollowDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<FollowDto> getAllFollowedByUser(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+
+        return followRepository.findAllByFollowing_UserId(user.getUserId())
                 .stream()
                 .map(this::mapFollowToFollowDto)
                 .collect(Collectors.toList());

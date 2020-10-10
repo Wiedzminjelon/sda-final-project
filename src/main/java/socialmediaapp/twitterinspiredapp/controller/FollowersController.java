@@ -25,4 +25,9 @@ public class FollowersController {
         return new ResponseEntity<>(followService.getAllFollowersForUser(username), HttpStatus.OK);
     }
 
+    @GetMapping("/all-followed-by-user/{username}")
+    public ResponseEntity<List<FollowDto>> getAllFollowedByUser (@PathVariable String username){
+        return new ResponseEntity<>(followService.getAllFollowedByUser(username), HttpStatus.OK);
+    }
+
 }
