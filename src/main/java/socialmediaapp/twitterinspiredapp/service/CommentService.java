@@ -1,6 +1,5 @@
 package socialmediaapp.twitterinspiredapp.service;
 
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import socialmediaapp.twitterinspiredapp.dto.CommentDto;
 import socialmediaapp.twitterinspiredapp.exceptions.PostNotFoundException;
@@ -17,12 +16,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 public class CommentService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final AuthService authService;
     private final CommentRepository commentRepository;
+
+    public CommentService(PostRepository postRepository, UserRepository userRepository, AuthService authService, CommentRepository commentRepository) {
+        this.postRepository = postRepository;
+        this.userRepository = userRepository;
+        this.authService = authService;
+        this.commentRepository = commentRepository;
+    }
 
     public CommentDto save(CommentDto commentDto) {
         postRepository.findById(commentDto.getPostId())

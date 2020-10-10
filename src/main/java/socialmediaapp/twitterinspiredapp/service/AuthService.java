@@ -1,6 +1,5 @@
 package socialmediaapp.twitterinspiredapp.service;
 
-import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,11 +17,16 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
 public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final VerificationTokenRepository verificationTokenRepository;
+
+    public AuthService(PasswordEncoder passwordEncoder, UserRepository userRepository, VerificationTokenRepository verificationTokenRepository) {
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+        this.verificationTokenRepository = verificationTokenRepository;
+    }
 
     @Transactional
     public User signup(RegisterRequest registerRequest) {
@@ -32,7 +36,7 @@ public class AuthService {
         user.setUsername(registerRequest.getUsername());
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setAccount_type(ACCOUNT_TYPE.PRIVATE);
+        user.setAccountType(ACCOUNT_TYPE.PRIVATE);
         user.setCreated(Instant.now());
         user.setEnabled(true);
 

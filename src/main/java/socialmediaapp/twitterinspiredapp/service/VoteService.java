@@ -1,6 +1,5 @@
 package socialmediaapp.twitterinspiredapp.service;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,6 @@ import java.util.Optional;
 import static socialmediaapp.twitterinspiredapp.enums.VOTE_TYPE.UPVOTE;
 
 @Service
-@AllArgsConstructor
 @Data
 public class VoteService {
 
@@ -28,6 +26,13 @@ public class VoteService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final AuthService authService;
+
+    public VoteService(VoteRepository voteRepository, PostRepository postRepository, UserRepository userRepository, AuthService authService) {
+        this.voteRepository = voteRepository;
+        this.postRepository = postRepository;
+        this.userRepository = userRepository;
+        this.authService = authService;
+    }
 
     public VoteDto vote(VoteDto voteDto) {
         Post post = postRepository.findById(voteDto.getPostId())
