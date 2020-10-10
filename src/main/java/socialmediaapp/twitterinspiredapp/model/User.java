@@ -42,9 +42,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private ACCOUNT_STATUS account_status;
 
-    @OneToMany
-    private List<Followers> followers;
+    @ManyToMany
+    private List<User> followers;
 
-    @OneToMany
-    private List<Followers> following;
+    @ManyToMany
+    private List<User> following;
 }

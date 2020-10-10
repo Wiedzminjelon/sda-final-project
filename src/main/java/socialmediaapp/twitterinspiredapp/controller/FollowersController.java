@@ -4,25 +4,25 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import socialmediaapp.twitterinspiredapp.dto.FollowersDto;
-import socialmediaapp.twitterinspiredapp.service.FollowersService;
+import socialmediaapp.twitterinspiredapp.dto.FollowDto;
+import socialmediaapp.twitterinspiredapp.service.FollowService;
 
 import java.util.List;
 
 @RestController()
 @AllArgsConstructor
 public class FollowersController {
-    private final FollowersService followersService;
+    private final FollowService followService;
 
 
     @PostMapping("/follow")
-    public ResponseEntity<FollowersDto> follow(@RequestBody FollowersDto followersDto) {
-        return new ResponseEntity<>(followersService.follow(followersDto), HttpStatus.OK);
+    public ResponseEntity<FollowDto> follow(@RequestBody FollowDto followDto) {
+        return new ResponseEntity<>(followService.follow(followDto), HttpStatus.OK);
     }
 
     @GetMapping("/all-followers-for-user/{username}")
-    public ResponseEntity<List<FollowersDto>> getAllFollowersForUser (@PathVariable String username){
-        return new ResponseEntity<>(followersService.getAllFollowersForUser(username), HttpStatus.OK);
+    public ResponseEntity<List<FollowDto>> getAllFollowersForUser (@PathVariable String username){
+        return new ResponseEntity<>(followService.getAllFollowersForUser(username), HttpStatus.OK);
     }
 
 }

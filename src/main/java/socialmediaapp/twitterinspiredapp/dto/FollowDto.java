@@ -10,7 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class FollowersDto {
+public class FollowDto {
+
+    private Long id;
+
     private String followingUserName;
 
     private String followedUserName;
