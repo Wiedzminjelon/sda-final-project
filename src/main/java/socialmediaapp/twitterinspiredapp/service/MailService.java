@@ -14,12 +14,16 @@ import socialmediaapp.twitterinspiredapp.model.NotificationEmail;
 
 @Service
 @Data
-@AllArgsConstructor
 @Slf4j
 public class MailService {
 
     private final JavaMailSender mailSender;
     private final MailContentBuilder contentBuilder;
+
+    public MailService(JavaMailSender mailSender, MailContentBuilder contentBuilder) {
+        this.mailSender = mailSender;
+        this.contentBuilder = contentBuilder;
+    }
 
     @Async
     void sendMail (NotificationEmail notificationEmail){

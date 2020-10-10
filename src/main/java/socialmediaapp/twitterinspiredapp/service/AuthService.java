@@ -89,7 +89,8 @@ public class AuthService {
 
     private void fetchUserAndEnable(VerificationToken verificationToken) {
         String username = verificationToken.getUser().getUsername();
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new SpringTwitterException("User with " + username + "not found"));
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new SpringTwitterException("User with " + username + "not found"));
         user.setEnabled(true);
         userRepository.save(user);
     }
