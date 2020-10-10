@@ -37,14 +37,9 @@ public class User {
     private boolean enabled;
 
     @Enumerated(EnumType.STRING)
-    private ACCOUNT_TYPE account_type;
+    private ACCOUNT_TYPE accountType;
 
     @Enumerated(EnumType.STRING)
-    private ACCOUNT_STATUS account_status;
+    private ACCOUNT_STATUS accountStatus;
 
-    @ManyToMany
-    private List<User> followers;
-
-    @ManyToMany
-    private List<User> following;
 }

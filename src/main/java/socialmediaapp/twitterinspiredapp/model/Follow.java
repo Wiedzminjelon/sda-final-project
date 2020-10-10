@@ -25,8 +25,6 @@ public class Follow {
     @ManyToOne
     private User followed;
 
-
     private Instant followDate;
-
 
 }

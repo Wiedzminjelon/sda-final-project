@@ -2,10 +2,8 @@ package socialmediaapp.twitterinspiredapp.service;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import socialmediaapp.twitterinspiredapp.dto.FollowDto;
 import socialmediaapp.twitterinspiredapp.exceptions.SpringTwitterException;
 import socialmediaapp.twitterinspiredapp.model.Follow;
@@ -19,23 +17,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 @Data
 public class FollowService {
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
 
+    public FollowService(FollowRepository followRepository, UserRepository userRepository) {
+        this.followRepository = followRepository;
+        this.userRepository = userRepository;
+    }
+
     @Transactional
     public FollowDto follow(FollowDto followDto) {
-        User followingUser = userRepository.findByUsername(followDto.getFollowingUserName()).orElseThrow();
-        User followedUser = userRepository.findByUsername(followDto.getFollowedUserName()).orElseThrow();
+        User followingUser = userRepository.findByUsername(followDto.getFollowingUserName())
+                .orElseThrow(()-> new SpringTwitterException("User not found!"));
+        User followedUser = userRepository.findByUsername(followDto.getFollowedUserName())
+                .orElseThrow(()-> new SpringTwitterException("User not found!"));
 
         if (followedUser.equals(followingUser)){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "You cannot follow yourself!" );
+            throw new SpringTwitterException("You cannot follow yourself!");
         }
-
-        followedUser.getFollowers().add(followingUser);
-        followingUser.getFollowing().add(followedUser);
 
         Follow follow = mapFollowDtoToFollow(followDto);
         followRepository.save(follow);

@@ -12,10 +12,13 @@ import socialmediaapp.twitterinspiredapp.service.VoteService;
 
 @RestController
 @RequestMapping("api/votes/")
-@AllArgsConstructor
 public class VoteController {
 
     private final VoteService voteService;
+
+    public VoteController(VoteService voteService) {
+        this.voteService = voteService;
+    }
 
     @PostMapping
     public ResponseEntity<VoteDto> vote(@RequestBody VoteDto voteDto){

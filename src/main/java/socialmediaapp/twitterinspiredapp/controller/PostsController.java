@@ -1,6 +1,5 @@
 package socialmediaapp.twitterinspiredapp.controller;
 
-import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import socialmediaapp.twitterinspiredapp.dto.PostDto;
@@ -13,9 +12,12 @@ import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping("/api/posts")
-@AllArgsConstructor
 public class PostsController {
     private final PostService postService;
+
+    public PostsController(PostService postService) {
+        this.postService = postService;
+    }
 
     @PostMapping
     public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto) {
