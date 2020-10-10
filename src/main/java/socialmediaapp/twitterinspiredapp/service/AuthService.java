@@ -54,6 +54,13 @@ public class AuthService {
         return user;
     }
 
+    public void verifyAccount(String token) {
+        Optional<VerificationToken> verificationToken = verificationTokenRepository.findByToken(token);
+        verificationToken
+                .orElseThrow(() -> new SpringTwitterException("Invalid Token"));
+        fetchUserAndEnable(verificationToken.get());
+    }
+
     public Optional<User> getUserById(Long userId) {
         return userRepository.findById(userId);
     }
@@ -79,12 +86,6 @@ public class AuthService {
 
     private boolean userExist(String username) {
         return userRepository.findByUsername(username).isPresent();
-    }
-
-    public void verifyAccount(String token) {
-        Optional<VerificationToken> verificationToken = verificationTokenRepository.findByToken(token);
-        verificationToken.orElseThrow(() -> new SpringTwitterException("Invalid Token"));
-        fetchUserAndEnable(verificationToken.get());
     }
 
     private void fetchUserAndEnable(VerificationToken verificationToken) {
