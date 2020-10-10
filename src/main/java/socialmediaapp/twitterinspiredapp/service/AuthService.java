@@ -1,6 +1,5 @@
 package socialmediaapp.twitterinspiredapp.service;
 
-import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,17 +19,18 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
 public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final VerificationTokenRepository verificationTokenRepository;
     private final MailService mailService;
 
-    public AuthService(PasswordEncoder passwordEncoder, UserRepository userRepository, VerificationTokenRepository verificationTokenRepository) {
+    public AuthService(PasswordEncoder passwordEncoder, UserRepository userRepository, VerificationTokenRepository verificationTokenRepository, MailService mailService) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.verificationTokenRepository = verificationTokenRepository;
+        this.mailService = mailService;
+
     }
 
     @Transactional
@@ -43,15 +43,18 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setAccountType(ACCOUNT_TYPE.PRIVATE);
         user.setCreated(Instant.now());
-        user.setEnabled(true);
+        user.setEnabled(false);
 
         userRepository.save(user);
         String token = generateVerificationToken(user);
         mailService.sendMail(new NotificationEmail("Please activate your account", "" + user.getEmail(),
-                "Please click this link to activate your account:" + "http:localhost:8080/auth/accountVerification/" + token));
+                "Please click this link to activate your account:" + "\n" + "\n" +
+                        "http:localhost:8080/auth/accountVerification/" + token + "\n" + "\n"));
+
+        return user;
     }
 
-    public Optional<User> getUserById(Long userId){
+    public Optional<User> getUserById(Long userId) {
         return userRepository.findById(userId);
     }
 
