@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import socialmediaapp.twitterinspiredapp.dto.RegisterRequest;
 import socialmediaapp.twitterinspiredapp.service.AuthService;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 @RestController
@@ -20,7 +21,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody @Valid RegisterRequest registerRequest) {
+    public ResponseEntity<String> signup(@RequestBody @Valid RegisterRequest registerRequest) throws MessagingException {
         authService.signup(registerRequest);
         return new ResponseEntity<>("User registration successful", HttpStatus.CREATED);
     }

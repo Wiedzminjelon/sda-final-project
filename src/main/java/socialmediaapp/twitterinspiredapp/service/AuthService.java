@@ -13,6 +13,7 @@ import socialmediaapp.twitterinspiredapp.model.VerificationToken;
 import socialmediaapp.twitterinspiredapp.repository.UserRepository;
 import socialmediaapp.twitterinspiredapp.repository.VerificationTokenRepository;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.Optional;
@@ -34,7 +35,7 @@ public class AuthService {
     }
 
     @Transactional
-    public User signup(RegisterRequest registerRequest) {
+    public User signup(RegisterRequest registerRequest) throws MessagingException {
         userAndEmailValidator(registerRequest);
 
         User user = new User();
@@ -47,10 +48,10 @@ public class AuthService {
 
         userRepository.save(user);
         String token = generateVerificationToken(user);
-        mailService.sendMail(new NotificationEmail("Please activate your account", "" + user.getEmail(),
-                "Please click this link to activate your account:" + "\n" + "\n" +
-                        "http:localhost:8080/auth/accountVerification/" + token + "\n" + "\n"));
 
+        mailService.sendEmail(new NotificationEmail("Please activate your account", "" + user.getEmail(),
+                "Please click this link to activate your account:" + "\n" + "\n" +
+                        "http:localhost:8080/auth/accountVerification/" + token + "\n" + "\n"),true);
         return user;
     }
 
