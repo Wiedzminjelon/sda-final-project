@@ -1,17 +1,24 @@
 package socialmediaapp.twitterinspiredapp.service;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import socialmediaapp.twitterinspiredapp.dto.AuthenticationResponse;
 import socialmediaapp.twitterinspiredapp.dto.RegisterRequest;
 import socialmediaapp.twitterinspiredapp.enums.ACCOUNT_TYPE;
 import socialmediaapp.twitterinspiredapp.exceptions.SpringTwitterException;
+import socialmediaapp.twitterinspiredapp.model.LoginRequest;
 import socialmediaapp.twitterinspiredapp.model.NotificationEmail;
 import socialmediaapp.twitterinspiredapp.model.User;
 import socialmediaapp.twitterinspiredapp.model.VerificationToken;
 import socialmediaapp.twitterinspiredapp.repository.UserRepository;
 import socialmediaapp.twitterinspiredapp.repository.VerificationTokenRepository;
+import socialmediaapp.twitterinspiredapp.security.JwtProvider;
 
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
@@ -25,13 +32,17 @@ public class AuthService {
     private final UserRepository userRepository;
     private final VerificationTokenRepository verificationTokenRepository;
     private final MailService mailService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtProvider jwtProvider;
 
-    public AuthService(PasswordEncoder passwordEncoder, UserRepository userRepository, VerificationTokenRepository verificationTokenRepository, MailService mailService) {
+    public AuthService(PasswordEncoder passwordEncoder, UserRepository userRepository, VerificationTokenRepository verificationTokenRepository,
+                       MailService mailService, AuthenticationManager authenticationManager, JwtProvider jwtProvider) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.verificationTokenRepository = verificationTokenRepository;
         this.mailService = mailService;
-
+        this.authenticationManager = authenticationManager;
+        this.jwtProvider = jwtProvider;
     }
 
     @Transactional
@@ -51,7 +62,7 @@ public class AuthService {
 
         mailService.sendEmail(new NotificationEmail("Please activate your account", "" + user.getEmail(),
                 "Please click this link to activate your account:" + "\n" + "\n" +
-                        "http:localhost:8080/auth/accountVerification/" + token + "\n" + "\n"),true);
+                        "http:localhost:8080/auth/accountVerification/" + token + "\n" + "\n"), true);
         return user;
     }
 
@@ -98,5 +109,12 @@ public class AuthService {
     }
 
 
+    public AuthenticationResponse login(LoginRequest loginRequest) {
+        Authentication authenticate = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),loginRequest.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
+        String token = jwtProvider.generateToken(authenticate);
+        return new AuthenticationResponse(token,loginRequest.getUsername());
+    }
 }
 
