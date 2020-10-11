@@ -1,7 +1,6 @@
 package socialmediaapp.twitterinspiredapp.security;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.util.JSONPObject;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
@@ -13,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.*;
 import java.security.cert.CertificateException;
+
+import static io.jsonwebtoken.Jwts.parser;
 
 @Service
 public class JwtProvider {
@@ -38,18 +39,21 @@ public class JwtProvider {
                 .compact();
     }
 
-    private PrivateKey getPrivateKey() {
-        try {
-            return (PrivateKey) keyStore.getKey("springblog", "secret".toCharArray());
-        } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException exception) {
-            throw new SpringTwitterException(" Exception occurred while retrieving public key from keystore");
-        }
+    @Deprecated
+    public boolean validateToken(String jwt) {
+        parser().setSigningKey(getPublicKey()).parseClaimsJws(jwt);
+        return true;
+        //todo change from deprecated!
     }
 
-    public boolean validateToken(String jwt) {
-        JsonObject jsonObject = JsonParser.
-        Jwts.parser().setSigningKey(getPublicKey()).parseClaimsJws(jwt);
-        return true;
+    @Deprecated
+    public String getUsernameFromJwt(String token) {
+        Claims claims = parser()
+                .setSigningKey(getPublicKey())
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.getSubject();
+        //todo change this - deprecated!
     }
 
     private PublicKey getPublicKey() {
@@ -60,5 +64,12 @@ public class JwtProvider {
         }
     }
 
+    private PrivateKey getPrivateKey() {
+        try {
+            return (PrivateKey) keyStore.getKey("springblog", "secret".toCharArray());
+        } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException exception) {
+            throw new SpringTwitterException(" Exception occurred while retrieving public key from keystore");
+        }
+    }
 
 }
