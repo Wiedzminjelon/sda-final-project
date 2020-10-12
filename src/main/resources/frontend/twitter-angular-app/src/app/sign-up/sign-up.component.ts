@@ -13,7 +13,8 @@ export class SignUpComponent implements OnInit {
   signupForm: FormGroup;
 
 
-  constructor(private authService: AuthService)  {  }
+  constructor(private authService: AuthService) {
+  }
 
 
   ngOnInit() {
@@ -24,19 +25,28 @@ export class SignUpComponent implements OnInit {
       passwordR: new FormControl('', Validators.required)
 
 
-  });
+    });
   }
 
   signup() {
-    this.signupRequestPayload={username: this.signupForm.get('username').value,
-    email: this.signupForm.get('email').value,
-    password: this.signupForm.get('password').value ,
-    confirmedPassword: this.signupForm.get('passwordR').value };
+    this.signupRequestPayload = {
+      username: this.signupForm.get('username').value,
+      email: this.signupForm.get('email').value,
+      password: this.signupForm.get('password').value,
+      confirmedPassword: this.signupForm.get('passwordR').value
+    };
 
-    this.authService.signup(this.signupRequestPayload).subscribe(()=>{
-      console.log('Signup successful');}, ()=>{
+    this.authService.signup(this.signupRequestPayload).subscribe(() => {
+      console.log('Signup successful');
+    }, () => {
       console.log('Signup failed');
     });
 
+  }
+
+  passwordValidation(password) {
+    if (!this.signupForm.get(password).valid && this.signupForm.get(password).touched) {
+
+    }
   }
 }
