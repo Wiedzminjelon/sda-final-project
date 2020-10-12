@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.security.*;
 import java.security.cert.CertificateException;
 
-import static io.jsonwebtoken.Jwts.parser;
+import static io.jsonwebtoken.Jwts.parserBuilder;
 
 @Service
 public class JwtProvider {
@@ -40,14 +40,14 @@ public class JwtProvider {
     }
 
     public boolean validateToken(String jwt) {
-        parser().setSigningKey(getPublicKey()).parseClaimsJws(jwt);
+        parserBuilder().setSigningKey(getPublicKey()).build().parseClaimsJws(jwt);
         return true;
-        //todo change from deprecated!
     }
 
     public String getUsernameFromJwt(String token) {
-        Claims claims = parser()
+        Claims claims = parserBuilder()
                 .setSigningKey(getPublicKey())
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
         return claims.getSubject();
