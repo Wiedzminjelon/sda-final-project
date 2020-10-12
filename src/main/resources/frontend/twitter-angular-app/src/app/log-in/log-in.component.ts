@@ -12,4 +12,9 @@ export class LogInComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  login():void{
+
+  }
 }
+
+
