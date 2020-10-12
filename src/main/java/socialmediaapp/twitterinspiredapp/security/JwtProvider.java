@@ -39,21 +39,18 @@ public class JwtProvider {
                 .compact();
     }
 
-    @Deprecated
     public boolean validateToken(String jwt) {
         parser().setSigningKey(getPublicKey()).parseClaimsJws(jwt);
         return true;
         //todo change from deprecated!
     }
 
-    @Deprecated
     public String getUsernameFromJwt(String token) {
         Claims claims = parser()
                 .setSigningKey(getPublicKey())
                 .parseClaimsJws(token)
                 .getBody();
         return claims.getSubject();
-        //todo change this - deprecated!
     }
 
     private PublicKey getPublicKey() {

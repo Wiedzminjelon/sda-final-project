@@ -29,7 +29,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 
     @Override
-    @Deprecated
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filter) throws ServletException, IOException {
@@ -47,7 +46,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filter.doFilter(request, response);
-        //todo change - deprecated!
     }
 
     private String getJwtFromRequest(HttpServletRequest request) {
