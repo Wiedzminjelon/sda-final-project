@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {SignupRequestPayload} from "./signup-request.payload";
 import {AuthService} from "../auth/auth.service";
@@ -45,8 +45,21 @@ export class SignUpComponent implements OnInit {
   }
 
   passwordValidation(password) {
-    if (!this.signupForm.get(password).valid && this.signupForm.get(password).touched) {
+    return (!this.signupForm.get(password).valid && this.signupForm.get(password).touched);
+  }
 
-    }
+  confirmedPasswordValidation(password, passwordR) {
+    return (!this.signupForm.get(password).valid
+      && this.signupForm.get(password).touched
+      && !this.signupForm.get(passwordR).valid
+      && this.signupForm.get(passwordR).touched);
+  }
+
+  validEmail(email) {
+    return (!this.signupForm.get(email).valid && this.signupForm.get(email).touched);
+  }
+
+  usernameRequired(username) {
+    return (!this.signupForm.get(username).valid && this.signupForm.get(username).touched);
   }
 }
