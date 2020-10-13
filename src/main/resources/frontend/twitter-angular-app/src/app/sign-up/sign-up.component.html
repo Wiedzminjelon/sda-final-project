@@ -16,7 +16,7 @@
   <div>
     <label for="password">Password:</label>
     <input type="password" [formControlName]="'password'" id="password" >
-    <div *ngIf=passwordValidation('password')>Please enter a valid password</div>
+    <span *ngIf ="!this.signupForm.get('password').valid && this.signupForm.get('password').touched">Please enter a valid password</span>
   </div>
 
   <div>

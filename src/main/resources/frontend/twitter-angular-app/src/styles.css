@@ -16,5 +16,5 @@ container{
 }
 
 input.ng-invalid.ng-touched{
-  border: 1px solid red;
+  border: 1px solid #ff0000;
 }

@@ -44,9 +44,5 @@ export class SignUpComponent implements OnInit {
 
   }
 
-  passwordValidation(password) {
-    if (!this.signupForm.get(password).valid && this.signupForm.get(password).touched) {
 
-    }
-  }
 }

@@ -7,7 +7,7 @@ import {HeaderComponent} from "./header/header.component";
 import {LogInComponent} from "./log-in/log-in.component";
 import {SignUpComponent} from "./sign-up/sign-up.component";
 import {UserComponent} from "./user/user.component";
-import {CreatePostComponent} from "./create-post/create-post.component";
+
 import {NotFoundComponent} from "./not-found/not-found.component";
 import {EditUserComponent} from "./edit-user/edit-user.component";
 import { WelcomeComponent } from './welcome/welcome.component';
@@ -15,6 +15,8 @@ import { SignUpSucceedComponent } from './sign-up-succeed/sign-up-succeed.compon
 import {ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import {AuthModule} from "./sign-up/auth.module";
+import {EditorModule} from "@tinymce/tinymce-angular";
+import {CreatePostComponent} from "./create-post/create-post.component";
 
 
 @NgModule({
@@ -25,17 +27,18 @@ import {AuthModule} from "./sign-up/auth.module";
     SignUpComponent,
     EditUserComponent,
     UserComponent,
-    CreatePostComponent,
     NotFoundComponent,
     WelcomeComponent,
-    SignUpSucceedComponent
+    SignUpSucceedComponent,
+    CreatePostComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AuthModule
+    AuthModule,
+    EditorModule
   ],
   providers: [],
   bootstrap: [AppComponent]
