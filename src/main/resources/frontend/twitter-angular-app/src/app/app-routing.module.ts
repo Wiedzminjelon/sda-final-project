@@ -6,11 +6,11 @@ import {EditUserComponent} from "./edit-user/edit-user.component";
 import {UserComponent} from "./user/user.component";
 import {CreatePostComponent} from "./create-post/create-post.component";
 import {NotFoundComponent} from "./not-found/not-found.component";
-import {AppComponent} from "./app.component";
+import {WelcomeComponent} from "./welcome/welcome.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/start', pathMatch: 'full'},
-  { path: 'start', component: AppComponent},
+  { path: 'start', component: WelcomeComponent},
   { path: 'login', component: LogInComponent},
   { path: 'signup', component: SignUpComponent},
   { path: 'edit', component: EditUserComponent},

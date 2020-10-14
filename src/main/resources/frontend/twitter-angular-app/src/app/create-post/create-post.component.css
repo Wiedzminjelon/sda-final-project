@@ -1,0 +1,41 @@
+#post, #description{
+
+  width: 50%;
+  height: 150px;
+  padding: 12px 20px;
+  resize: none;
+  border: solid deepskyblue;
+
+}
+
+#description{
+
+  height: 15px;
+}
+
+div{
+  position: relative;
+  left: 30px;
+  padding-top: 20px;
+}
+
+button{
+  height: 40px;
+  width: 100px;
+  position: relative;
+  left: 30px;
+  background-color: dodgerblue;
+  color: azure;
+
+  border-radius: 5px;
+
+}
+
+label{
+  padding-bottom: 20px;
+  padding-top: 20px;
+  font-weight: bold;
+
+}
+
+

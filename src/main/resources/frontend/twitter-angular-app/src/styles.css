@@ -1,6 +1,20 @@
-header {
-  padding-top: 20px;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&family=Sansita+Swashed:wght@500&display=swap');
+
+
+  header {
+  padding-top: 15px;
   padding-bottom: 15px;
-  background: #241335;
+  background: azure;
   color:#338495;
+}
+
+container{
+  margin: 0 auto ;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
+}
+
+input.ng-invalid.ng-touched{
+  border: 1px solid #ff0000;
 }
