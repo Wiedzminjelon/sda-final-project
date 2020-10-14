@@ -1,16 +1,19 @@
 <div class="container">
   <h3>Login</h3>
 
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <div>
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" [formControlName]="'username'">
+      <span *ngIf="usernameValidation('username')"> Please provide a valid username </span>
+    </div>
 
-  <div>
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username">
-  </div>
+    <div>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" [formControlName]="'password'">
+      <span *ngIf="passwordValidation('password')"> Please enter a valid password </span>
+    </div>
 
-  <div>
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password">
-  </div>
-
-  <button type="submit"> Sign in </button>
+    <button type="submit" class="login"> Login</button>
+  </form>
 </div>

@@ -1,30 +1,33 @@
 <div class="container">
   <h3>Join us!</h3>
 
-    <form [formGroup]="signupForm" (ngSubmit)="signup()">
-      <div>
+  <form [formGroup]="signupForm" (ngSubmit)="signup()">
+    <div>
       <label for="email">Email:</label>
       <input type="email" [formControlName]="'email'" id="email">
-      <span *ngIf="!signupForm.get('email').valid && signupForm.get('email').touched">Please enter a valid email</span>
-      </div>
-      <div>
+      <span *ngIf="emailValidation('email')"> Please enter a valid email </span>
+    </div>
+    <div>
       <label for="username">Login:</label>
-      <input type="text" [formControlName]="'username'" id="username" >
-      </div>
+      <input type="text" [formControlName]="'username'" id="username">
+      <span *ngIf="usernameValidation('username')"> Please provide a valid username </span>
+    </div>
 
 
-  <div>
-    <label for="password">Password:</label>
-    <input type="password" [formControlName]="'password'" id="password" >
-    <span *ngIf ="!this.signupForm.get('password').valid && this.signupForm.get('password').touched">Please enter a valid password</span>
-  </div>
+    <div>
+      <label for="password">Password:</label>
+      <input type="password" [formControlName]="'password'" id="password">
+      <span *ngIf="passwordValidation('password')"> Please enter a valid password </span>
+    </div>
 
-  <div>
-    <label for="passwordR">Repeat password:</label>
-    <input type="password" [formControlName]="'passwordR'" id="passwordR" >
-  </div>
+    <div>
+      <label for="passwordR">Repeat password:</label>
+      <input type="password" [formControlName]="'passwordR'" id="passwordR">
+      <span *ngIf="passwordRValidation('passwordR')"> Please enter a valid repeated password </span>
+
+    </div>
 
 
-  <button type="submit" class="sign-up">Sign Up</button>
-    </form>
+    <button type="submit" class="sign-up">Sign Up</button>
+  </form>
 </div>

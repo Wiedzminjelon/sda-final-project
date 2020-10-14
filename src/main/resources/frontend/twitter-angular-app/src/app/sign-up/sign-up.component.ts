@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {SignupRequestPayload} from "./signup-request.payload";
 import {AuthService} from "../auth/auth.service";
@@ -12,10 +12,8 @@ export class SignUpComponent implements OnInit {
   signupRequestPayload: SignupRequestPayload;
   signupForm: FormGroup;
 
-
   constructor(private authService: AuthService) {
   }
-
 
   ngOnInit() {
     this.signupForm = new FormGroup({
@@ -23,8 +21,6 @@ export class SignUpComponent implements OnInit {
       username: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required),
       passwordR: new FormControl('', Validators.required)
-
-
     });
   }
 
@@ -44,5 +40,19 @@ export class SignUpComponent implements OnInit {
 
   }
 
+  emailValidation(email) {
+    return (!this.signupForm.get(email).valid && this.signupForm.get(email).touched);
+  }
 
+  passwordValidation(password) {
+    return (!this.signupForm.get(password).valid && this.signupForm.get(password).touched);
+  }
+
+  usernameValidation(username) {
+    return (!this.signupForm.get(username).valid && this.signupForm.get(username).touched);
+  }
+
+  passwordRValidation(passwordR) {
+    return (!this.signupForm.get(passwordR).valid && this.signupForm.get(passwordR).touched);
+  }
 }
