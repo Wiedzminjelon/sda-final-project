@@ -66,7 +66,8 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "angular-app:build:production"
+              "browserTarget": "angular-app:build:production",
+              "proxyConfig": "src/proxy.conf.json"
             }
           }
         },
