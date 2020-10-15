@@ -17,6 +17,10 @@ import {HttpClientModule} from "@angular/common/http";
 import {AuthModule} from "./sign-up/auth.module";
 import {EditorModule} from "@tinymce/tinymce-angular";
 import {CreatePostComponent} from "./create-post/create-post.component";
+import { NgxWebstorageModule } from 'ngx-webstorage';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {ToastrModule} from "ngx-toastr";
+
 
 
 @NgModule({
@@ -38,7 +42,10 @@ import {CreatePostComponent} from "./create-post/create-post.component";
     ReactiveFormsModule,
     HttpClientModule,
     AuthModule,
-    EditorModule
+    EditorModule,
+    NgxWebstorageModule.forRoot(),
+    BrowserAnimationsModule,
+    ToastrModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

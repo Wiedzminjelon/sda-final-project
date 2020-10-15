@@ -30,7 +30,7 @@ public class PostService {
     @Transactional
     public PostDto save(PostDto postDto) {
         userRepository.findByUsername(postDto.getUserName()).
-                orElseThrow(() -> new ResponseStatusException(HttpStatus.OK, "User not found!"));
+                orElseThrow(() -> new SpringTwitterException("User not found!"));
         Post post = mapPostDtoToPost(postDto);
         postRepository.save(post);
         return postDto;

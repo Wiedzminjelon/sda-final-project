@@ -15,5 +15,10 @@
     </div>
 
     <button type="submit" class="login"> Login</button>
+    <div class="login-failed" *ngIf="this.isError"> Login failed. Please check your credentials and try again</div>
+    <div class="login-failed" *ngIf="this.registerSuccessMessage.length > 0">
+      <p>{{registerSuccessMessage}}</p>
+    </div>
+
   </form>
 </div>
