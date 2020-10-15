@@ -40,7 +40,7 @@ export class CreatePostComponent implements OnInit {
   newPost() {
     this.newPostRequestPayload = {
       description: this.newPostForm.get('description').value,
-      id: 0,
+       id: 0,
       url: this.newPostForm.get('url').value,
       postName: this.newPostForm.get('postName').value,
       userName: this.newPostForm.get('userName').value
