@@ -5,22 +5,23 @@ import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 
-@Value
 @Builder
 @AllArgsConstructor
+@Data
+@NoArgsConstructor
 public class PostDto {
 
-     Long id;
+     private Long id;
 
      @NotBlank
-     String postName;
+     private String postName;
 
 
-     String url;
-
-     @NotBlank
-     String description;
+    private String url;
 
      @NotBlank
-     String userName;
+     private String description;
+
+     @NotBlank
+     private String userName;
 }

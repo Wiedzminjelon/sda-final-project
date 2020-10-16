@@ -1,13 +1,11 @@
 package socialmediaapp.twitterinspiredapp.service;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import socialmediaapp.twitterinspiredapp.dto.AuthenticationResponse;
 import socialmediaapp.twitterinspiredapp.dto.RefreshTokenRequest;
 import socialmediaapp.twitterinspiredapp.dto.RegisterRequest;
@@ -48,6 +46,14 @@ public class AuthService {
         this.authenticationManager = authenticationManager;
         this.jwtProvider = jwtProvider;
         this.refreshTokenService = refreshTokenService;
+    }
+
+    @Transactional
+    public User getCurrentUser() {
+        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.
+                getContext().getAuthentication().getPrincipal();
+        return userRepository.findByUsername(principal.getUsername())
+                .orElseThrow(() -> new SpringTwitterException("User name not found - " + principal.getUsername()));
     }
 
     @Transactional

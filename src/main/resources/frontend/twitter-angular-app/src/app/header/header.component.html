@@ -1,5 +1,5 @@
 <header>
-  <div *ngIf=!"authService.isLoggedIn()">
+  <div *ngIf="authService.isLoggedIn()">
     <a routerLink="/">
       <img
         src="https://st3.depositphotos.com/5142301/12930/v/950/depositphotos_129309942-stock-illustration-t-letter-logo-in-square.jpg"
@@ -17,7 +17,7 @@
   </div>
   </div>
 
-  <div *ngIf="authService.isLoggedIn()">
+  <div *ngIf="!authService.isLoggedIn()">
     <a routerLink="/">
       <img
         src="https://st3.depositphotos.com/5142301/12930/v/950/depositphotos_129309942-stock-illustration-t-letter-logo-in-square.jpg"
