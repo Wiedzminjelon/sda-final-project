@@ -1,8 +1,6 @@
 package socialmediaapp.twitterinspiredapp.service;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import socialmediaapp.twitterinspiredapp.dto.PostDto;
 
 import socialmediaapp.twitterinspiredapp.exceptions.SpringTwitterException;
@@ -30,7 +28,7 @@ public class PostService {
     @Transactional
     public PostDto save(PostDto postDto) {
         userRepository.findByUsername(postDto.getUserName()).
-                orElseThrow(() -> new ResponseStatusException(HttpStatus.OK, "User not found!"));
+                orElseThrow(() -> new SpringTwitterException("User not found!"));
         Post post = mapPostDtoToPost(postDto);
         postRepository.save(post);
         return postDto;

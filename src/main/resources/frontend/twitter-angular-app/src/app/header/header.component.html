@@ -1,15 +1,38 @@
 <header>
-    <div>
-      <a routerLink="/">
-        <img src="https://st3.depositphotos.com/5142301/12930/v/950/depositphotos_129309942-stock-illustration-t-letter-logo-in-square.jpg"  class="t-icon">
-        <div class="logo-text">
-          Twitter 2.0
-        </div>
-      </a>
-    </div>
-    <div>
-      <a routerLink="/signup" class="float-right signup mr-2">Sign up</a> </div>
-      <div><a routerLink="/login" class="float-right login mr-2">Login</a>
-    </div>
+  <div *ngIf="authService.isLoggedIn()">
+    <a routerLink="/">
+      <img
+        src="https://st3.depositphotos.com/5142301/12930/v/950/depositphotos_129309942-stock-illustration-t-letter-logo-in-square.jpg"
+        class="t-icon">
+      <div class="logo-text">
+        Twitter 2.0
+      </div>
+    </a>
+
+  <div>
+    <a routerLink="/signup" class="float-right signup mr-2">Sign up</a>
+  </div>
+  <div>
+    <a routerLink="/login" class="float-right login mr-2">Login</a>
+  </div>
+  </div>
+
+  <div *ngIf="!authService.isLoggedIn()">
+    <a routerLink="/">
+      <img
+        src="https://st3.depositphotos.com/5142301/12930/v/950/depositphotos_129309942-stock-illustration-t-letter-logo-in-square.jpg"
+        class="t-icon">
+      <div class="logo-text">
+        Twitter 2.0
+      </div>
+    </a>
+
+  <div>
+    <a routerLink="/user" class="float-right signup mr-2">User profile</a>
+  </div>
+  <div>
+    <a routerLink="/start" class="float-right login mr-2">Log out</a>
+  </div>
+  </div>
 
 </header>

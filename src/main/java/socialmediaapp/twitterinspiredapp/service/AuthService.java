@@ -1,15 +1,15 @@
 package socialmediaapp.twitterinspiredapp.service;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import socialmediaapp.twitterinspiredapp.dto.AuthenticationResponse;
+import socialmediaapp.twitterinspiredapp.dto.RefreshTokenRequest;
 import socialmediaapp.twitterinspiredapp.dto.RegisterRequest;
+import socialmediaapp.twitterinspiredapp.dto.SignUpResponse;
 import socialmediaapp.twitterinspiredapp.enums.ACCOUNT_TYPE;
 import socialmediaapp.twitterinspiredapp.exceptions.SpringTwitterException;
 import socialmediaapp.twitterinspiredapp.model.LoginRequest;
@@ -34,19 +34,30 @@ public class AuthService {
     private final MailService mailService;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
+    private final RefreshTokenService refreshTokenService;
+
 
     public AuthService(PasswordEncoder passwordEncoder, UserRepository userRepository, VerificationTokenRepository verificationTokenRepository,
-                       MailService mailService, AuthenticationManager authenticationManager, JwtProvider jwtProvider) {
+                       MailService mailService, AuthenticationManager authenticationManager, JwtProvider jwtProvider, RefreshTokenService refreshTokenService) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.verificationTokenRepository = verificationTokenRepository;
         this.mailService = mailService;
         this.authenticationManager = authenticationManager;
         this.jwtProvider = jwtProvider;
+        this.refreshTokenService = refreshTokenService;
     }
 
     @Transactional
-    public User signup(RegisterRequest registerRequest) throws MessagingException {
+    public User getCurrentUser() {
+        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.
+                getContext().getAuthentication().getPrincipal();
+        return userRepository.findByUsername(principal.getUsername())
+                .orElseThrow(() -> new SpringTwitterException("User name not found - " + principal.getUsername()));
+    }
+
+    @Transactional
+    public SignUpResponse signup(RegisterRequest registerRequest) throws MessagingException {
         userAndEmailValidator(registerRequest);
 
         User user = new User();
@@ -63,7 +74,7 @@ public class AuthService {
         mailService.sendEmail(new NotificationEmail("Please activate your account", "" + user.getEmail(),
                 "Please click this link to activate your account:" + "\n" + "\n" +
                         "http:localhost:8080/auth/accountVerification/" + token + "\n" + "\n"), true);
-        return user;
+        return new SignUpResponse("User registered successfully!");
     }
 
     public void verifyAccount(String token) {
@@ -88,7 +99,7 @@ public class AuthService {
 
     private void userAndEmailValidator(RegisterRequest registerRequest) {
         if (emailExist(registerRequest.getEmail()) || userExist(registerRequest.getUsername())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "User with this username or email exists!");
+            throw new SpringTwitterException("Username or email already exist!");
         }
     }
 
@@ -111,10 +122,26 @@ public class AuthService {
 
     public AuthenticationResponse login(LoginRequest loginRequest) {
         Authentication authenticate = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),loginRequest.getPassword()));
+                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authenticate);
         String token = jwtProvider.generateToken(authenticate);
-        return new AuthenticationResponse(token,loginRequest.getUsername());
+        return AuthenticationResponse.builder()
+                .authenticationToken(token)
+                .refreshToken(refreshTokenService.generateRefreshToken().getToken())
+                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
+                .username(loginRequest.getUsername())
+                .build();
+    }
+
+    public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+        refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
+        String token = jwtProvider.generateTokenWithUsername(refreshTokenRequest.getUsername());
+        return AuthenticationResponse.builder()
+                .authenticationToken(token)
+                .refreshToken(refreshTokenRequest.getRefreshToken())
+                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
+                .username(refreshTokenRequest.getUsername())
+                .build();
     }
 }
 
