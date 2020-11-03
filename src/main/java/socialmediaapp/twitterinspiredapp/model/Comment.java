@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.time.Instant;
+import java.sql.Timestamp;
 
 @Data
 @Builder
@@ -26,7 +26,7 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
 
-    private Instant createdDate;
+    private Timestamp created;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;

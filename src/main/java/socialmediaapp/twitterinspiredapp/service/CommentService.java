@@ -11,7 +11,9 @@ import socialmediaapp.twitterinspiredapp.repository.CommentRepository;
 import socialmediaapp.twitterinspiredapp.repository.PostRepository;
 import socialmediaapp.twitterinspiredapp.repository.UserRepository;
 
-import java.time.Instant;
+import javax.transaction.Transactional;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,12 +31,13 @@ public class CommentService {
         this.commentRepository = commentRepository;
     }
 
+    @Transactional
     public CommentDto save(CommentDto commentDto) {
         postRepository.findById(commentDto.getPostId())
                 .orElseThrow(() -> new PostNotFoundException("Post not found!"));
         Comment comment = mapCommentDtoToComment(commentDto);
         commentRepository.save(comment);
-        return commentDto;
+        return mapCommentToCommentDto(comment);
     }
 
     public List<CommentDto> getAllCommentsForPost(Long postId) {
@@ -56,8 +59,8 @@ public class CommentService {
     private Comment mapCommentDtoToComment(CommentDto commentDto) {
         return Comment.builder()
                 .text(commentDto.getText())
-                .createdDate(Instant.now())
-                .user(userRepository.findByUsername(commentDto.getUserName()).orElseThrow(() -> new SpringTwitterException("User not found!")))
+                .created(Timestamp.valueOf(LocalDateTime.now()))
+                .user(userRepository.findByUsername(commentDto.getUsername()).orElseThrow(() -> new SpringTwitterException("User not found!")))
                 .post(postRepository.findById(commentDto.getPostId()).orElseThrow(() -> new SpringTwitterException("Post not found!")))
                 .build();
     }
@@ -65,9 +68,10 @@ public class CommentService {
     private CommentDto mapCommentToCommentDto(Comment comment) {
         return CommentDto.builder()
                 .id(comment.getId())
-                .postId(comment.getPost().getPostId())
+                .postId(comment.getPost().getId())
                 .text(comment.getText())
-                .userName(comment.getUser().getUsername())
+                .username(comment.getUser().getUsername())
+                .created(comment.getCreated())
                 .build();
     }
 }

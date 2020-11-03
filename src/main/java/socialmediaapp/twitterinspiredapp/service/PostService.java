@@ -9,7 +9,8 @@ import socialmediaapp.twitterinspiredapp.repository.PostRepository;
 import socialmediaapp.twitterinspiredapp.repository.UserRepository;
 
 import javax.transaction.Transactional;
-import java.time.Instant;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,11 +28,9 @@ public class PostService {
 
     @Transactional
     public PostDto save(PostDto postDto) {
-        userRepository.findByUsername(postDto.getUserName()).
-                orElseThrow(() -> new SpringTwitterException("User not found!"));
         Post post = mapPostDtoToPost(postDto);
         postRepository.save(post);
-        return postDto;
+        return mapPostToPostDto(post);
     }
 
     public List<PostDto> getAllPosts() {
@@ -48,26 +47,34 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
+    public PostDto getPostById(Long id) {
+        Post post = postRepository.findById(id).orElseThrow(()-> new SpringTwitterException("Post Not Found"));
+        return mapPostToPostDto(post);
+
+    }
+
 
     private Post mapPostDtoToPost(PostDto postDto) {
         return Post.builder()
                 .postName(postDto.getPostName())
                 .description(postDto.getDescription())
                 .voteCount(0)
-                .createdDate(Instant.now())
+                .created(Timestamp.valueOf(LocalDateTime.now()))
                 .url(postDto.getUrl())
-                .user(userRepository.findByUsername(postDto.getUserName())
+                .user(userRepository.findByUsername(postDto.getUsername())
                         .orElseThrow(() -> new SpringTwitterException("User not found!")))
                 .build();
     }
 
     static PostDto mapPostToPostDto(Post post) {
         return PostDto.builder()
-                .userName(post.getUser().getUsername())
+                .username(post.getUser().getUsername())
                 .url(post.getUrl())
                 .description(post.getDescription())
                 .postName(post.getPostName())
-                .id(post.getPostId())
+                .id(post.getId())
+                .voteCount(post.getVoteCount())
+                .created(post.getCreated())
                 .build();
     }
 

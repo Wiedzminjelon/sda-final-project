@@ -1,0 +1,20 @@
+<div>
+  <div> Here you can find all posts</div>
+
+  <div *ngFor="let post of post | async">
+    <h3>Title: {{post.postName}}</h3>
+    <h3>Link: {{post.url}}</h3>
+    <h3 id="description"> Description: {{post.description}}</h3>
+    <h3>Vote count: {{post.voteCount}}</h3>
+    <h3>Added by user: {{post.username}}</h3>
+    <h3>Time: {{post.created}}</h3>
+    <p></p>
+    <app-create-comment></app-create-comment>
+    <p></p>
+  </div>
+
+  <app-create-comment></app-create-comment>
+  <h1> TODO: wstawic link do komentarzy </h1>
+  <h1> TODO: dodac widok z up/down vote </h1>
+
+</div>

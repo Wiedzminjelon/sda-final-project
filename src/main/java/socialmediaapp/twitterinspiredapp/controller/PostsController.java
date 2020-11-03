@@ -26,12 +26,18 @@ public class PostsController {
 
     @GetMapping("/all")
     public ResponseEntity<List<PostDto>> getAllPosts() {
+
         return new ResponseEntity<>(postService.getAllPosts(), OK);
     }
 
     @GetMapping("/all-by-user/{username}")
     public ResponseEntity<List<PostDto>> getAllPostsForUser(@PathVariable String username) {
         return new ResponseEntity<>(postService.getAllPostsForUser(username), OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PostDto> getPost(@PathVariable Long id){
+        return new ResponseEntity<>(postService.getPostById(id),OK);
     }
 
 

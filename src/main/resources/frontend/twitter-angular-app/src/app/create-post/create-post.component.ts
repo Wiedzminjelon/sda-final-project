@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from "@angular/forms";
 
-import {CreatePostService} from "./createPost.service";
 import {Router} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
 import {HttpClient} from "@angular/common/http";
-
+import {PostService} from "../service/post.service";
 
 
 @Component({
@@ -14,36 +13,42 @@ import {HttpClient} from "@angular/common/http";
   styleUrls: ['./create-post.component.css']
 })
 export class CreatePostComponent implements OnInit {
-  newPostRequestPayload: { postName: any; id: any; description: any; userName: any; url: any };
   newPostForm: FormGroup;
+  newPostRequestPayload: {
+    postName: any;
+    description: any;
+    username: any;
+    url: any
+  };
 
-  constructor( private http: HttpClient, private toastr: ToastrService, private createPostService: CreatePostService, private router: Router) {
+
+  constructor(private http: HttpClient,
+              private toastr: ToastrService,
+              private createPostService: PostService,
+              private router: Router) {
     this.newPostRequestPayload = {
       description: '',
-      id: 0,
       url: '',
       postName: '',
-      userName: ''
+      username: ''
     }
-
   }
 
-  ngOnInit(){
+  ngOnInit() {
     this.newPostForm = new FormGroup({
       description: new FormControl(''),
       url: new FormControl(''),
       postName: new FormControl(''),
-      userName: new FormControl('')
+      username: new FormControl('')
     })
   }
 
   newPost() {
     this.newPostRequestPayload = {
       description: this.newPostForm.get('description').value,
-       id: 0,
       url: this.newPostForm.get('url').value,
       postName: this.newPostForm.get('postName').value,
-      userName: this.newPostForm.get('userName').value
+      username: this.newPostForm.get('username').value
     };
 
     this.createPostService.newPost(this.newPostRequestPayload).subscribe(data => {
@@ -51,8 +56,12 @@ export class CreatePostComponent implements OnInit {
       this.toastr.error('Creating post failed! Please try again.')
     });
 
-    }
   }
+
+  descriptionValidation(description) {
+    return (!this.newPostForm.get(description).valid && this.newPostForm.get(description).touched);
+  }
+}
 
 
 

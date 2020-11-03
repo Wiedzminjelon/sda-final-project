@@ -19,7 +19,7 @@ public class CommentsController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<CommentDto> createComment(@RequestBody socialmediaapp.twitterinspiredapp.dto.CommentDto commentDto) {
+    public ResponseEntity<CommentDto> createComment(@RequestBody CommentDto commentDto) {
         return new ResponseEntity<>(commentService.save(commentDto), CREATED);
     }
 

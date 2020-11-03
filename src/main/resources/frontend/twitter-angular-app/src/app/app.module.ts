@@ -18,6 +18,10 @@ import {NgxWebstorageModule} from 'ngx-webstorage';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToastrModule} from "ngx-toastr";
 import {HeaderComponent} from "./header/header.component";
+import { PostComponent } from './post/post.component';
+import {PostService} from "./service/post.service";
+import {CommentService} from "./service/comment.service";
+import {CreateCommentComponent} from "./create-comment/create-comment.component";
 
 
 @NgModule({
@@ -31,7 +35,9 @@ import {HeaderComponent} from "./header/header.component";
     NotFoundComponent,
     WelcomeComponent,
     SignUpSucceedComponent,
-    CreatePostComponent
+    CreatePostComponent,
+    PostComponent,
+    CreateCommentComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +50,10 @@ import {HeaderComponent} from "./header/header.component";
     BrowserAnimationsModule,
     ToastrModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    PostService,
+    CommentService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

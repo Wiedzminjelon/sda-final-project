@@ -2,8 +2,10 @@ package socialmediaapp.twitterinspiredapp.dto;
 
 
 import lombok.*;
+import socialmediaapp.twitterinspiredapp.model.User;
 
 import javax.validation.constraints.NotBlank;
+import java.sql.Timestamp;
 
 @Builder
 @AllArgsConstructor
@@ -11,17 +13,20 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class PostDto {
 
-     private Long id;
+    private Long id;
 
-     @NotBlank
-     private String postName;
-
+    @NotBlank
+    private String postName;
 
     private String url;
 
-     @NotBlank
-     private String description;
+    @NotBlank
+    private String description;
 
-     @NotBlank
-     private String userName;
+    private Integer voteCount;
+
+    @NotBlank
+    private String username;
+
+    private Timestamp created;
 }

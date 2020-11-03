@@ -10,6 +10,7 @@ import {ToastrService} from "ngx-toastr";
   templateUrl: './log-in.component.html',
   styleUrls: ['./log-in.component.css']
 })
+
 export class LogInComponent implements OnInit {
   loginRequestPayload: LogInRequestPayload;
   loginForm: FormGroup;
@@ -56,7 +57,6 @@ export class LogInComponent implements OnInit {
     });
   }
 
-
   usernameValidation(username) {
     return (!this.loginForm.get(username).valid && this.loginForm.get(username).touched);
   }
@@ -65,5 +65,4 @@ export class LogInComponent implements OnInit {
     return (!this.loginForm.get(password).valid && this.loginForm.get(password).touched);
   }
 }
-
 
