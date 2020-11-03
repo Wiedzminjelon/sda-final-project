@@ -8,6 +8,8 @@ import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.Instant;
 
 @Data
@@ -15,10 +17,10 @@ import java.time.Instant;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Post {
+public class Post{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postId;
+    private Long id;
 
     @NotBlank(message = "Post name cannot be empty")
     private String postName;
@@ -34,6 +36,6 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    private Instant createdDate;
+    private Timestamp created;
 
 }

@@ -9,12 +9,22 @@
       </div>
     </a>
 
-  <div>
-    <a routerLink="/signup" class="float-right signup mr-2">Sign up</a>
-  </div>
-  <div>
-    <a routerLink="/login" class="float-right login mr-2">Login</a>
-  </div>
+    <div>
+      <a routerLink="/start" class="float-right signup mr-2">Go back to start</a>
+    </div>
+
+    <div>
+      <a routerLink="/create" class="float-right signup mr-2"> Create post</a>
+    </div>
+
+    <div>
+      <button (click)="authService.logout()" class="float-right login mr-2"> Logout </button>
+    </div>
+
+    <div>
+      <a routerLink="/post" class="float-right signup mr-2"> Show posts </a>
+    </div>
+
   </div>
 
   <div *ngIf="!authService.isLoggedIn()">
@@ -27,12 +37,19 @@
       </div>
     </a>
 
-  <div>
-    <a routerLink="/user" class="float-right signup mr-2">User profile</a>
+    <div>
+      <a routerLink="/start" class="float-right signup mr-2">Go back to start</a>
+    </div>
+
+    <div>
+      <a routerLink="/signup" class="float-right signup mr-2">Sign up</a>
+    </div>
+
+    <div>
+      <a routerLink="/login" class="float-right login mr-2">Login</a>
+    </div>
+
   </div>
-  <div>
-    <a routerLink="/start" class="float-right login mr-2">Log out</a>
-  </div>
-  </div>
+
 
 </header>

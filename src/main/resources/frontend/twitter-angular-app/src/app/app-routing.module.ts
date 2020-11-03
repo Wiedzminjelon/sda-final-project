@@ -7,6 +7,7 @@ import {UserComponent} from "./user/user.component";
 import {CreatePostComponent} from "./create-post/create-post.component";
 import {NotFoundComponent} from "./not-found/not-found.component";
 import {WelcomeComponent} from "./welcome/welcome.component";
+import {PostComponent} from "./post/post.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/start', pathMatch: 'full'},
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'edit', component: EditUserComponent},
   { path: 'user', component: UserComponent},
   { path: 'create', component: CreatePostComponent},
+  {path: 'post', component: PostComponent},
   { path: '404', component:NotFoundComponent },
   { path: '**', redirectTo: '/404'},
 ];

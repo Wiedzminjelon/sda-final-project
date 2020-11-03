@@ -35,7 +35,7 @@ export class AuthService {
     return this.http.post<LoginResponse>(angularHost + '/login', loginRequestPayload).pipe(map(data => {
       this.localStorage.store('authenticationToken', data.authenticationToken)
       this.localStorage.store('username', data.username)
-      this.localStorage.store('refreshtoken', data.refreshToken)
+      this.localStorage.store('refreshToken', data.refreshToken)
       this.localStorage.store('expiresAt', data.expiresAt);
 
       return true;
@@ -62,6 +62,7 @@ export class AuthService {
   getUserName() {
     return this.localStorage.retrieve('username');
   }
+
   getRefreshToken() {
     return this.localStorage.retrieve('refreshToken');
   }

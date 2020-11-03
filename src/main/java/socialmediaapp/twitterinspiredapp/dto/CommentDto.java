@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+
 
 @Data
 @NoArgsConstructor
@@ -14,5 +17,6 @@ public class CommentDto {
     private Long id;
     private Long postId;
     private String text;
-    private String userName;
+    private String username;
+    private Timestamp created;
 }
