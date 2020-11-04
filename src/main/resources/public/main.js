@@ -118,7 +118,7 @@ const environment = {
 
 /***/ "CxmI":
 /*!******************************************************!*\
-  !*** ./src/app/create-post/create-post.component.ts ***!
+  !*** ./src/app/create-post/create-show-posts.component.ts ***!
   \******************************************************/
 /*! exports provided: CreatePostComponent */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -238,8 +238,8 @@ CreatePostComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefi
         type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"],
         args: [{
                 selector: 'app-create-post',
-                templateUrl: './create-post.component.html',
-                styleUrls: ['./create-post.component.css']
+                templateUrl: './create-show-posts.component.html',
+                styleUrls: ['./create-show-posts.component.css']
             }]
     }], function () { return [{ type: _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpClient"] }, { type: ngx_toastr__WEBPACK_IMPORTED_MODULE_3__["ToastrService"] }, { type: _createPost_service__WEBPACK_IMPORTED_MODULE_4__["CreatePostService"] }, { type: _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"] }]; }, null); })();
 

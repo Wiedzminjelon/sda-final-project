@@ -1,0 +1,43 @@
+
+h3 {
+width: auto;
+  height: 15px;
+  padding: 12px 20px;
+  resize: none;
+  border: solid deepskyblue;
+}
+
+#description {
+  height: 150px;
+}
+
+.show-posts-header,
+.comment-section-header {
+  text-align: center;
+  background-color: greenyellow;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.show-posts-with-comments-block {
+  text-align: center;
+}
+
+span{
+  float: left;
+  display: inline-flex;
+  width: 29%;
+  border-style: solid;
+  border-color: dodgerblue;
+  margin: 1.5%;
+}
+
+.comment-section{
+  margin: 7%;
+}
+
+h4{
+
+}
+
+
+

@@ -1,0 +1,34 @@
+<div>
+  <div class="show-posts-header">
+    <h2>Here you can find all posts</h2>
+  </div>
+  <div class="show-posts-with-comments-block">
+    <div *ngFor="let post of posts | async">
+      <h3>Title: {{post.postName}}</h3>
+      <h3 id="description"> Description: {{post.description}}</h3>
+      <h3>Link: {{post.url}}</h3>
+      <span class="vote-counter">
+        Vote count: {{post.voteCount}}
+      </span>
+      <span class="commented-by">
+        Added by user: {{post.username}}
+      </span>
+      <span class="created">
+      Time: {{post.created}}
+      </span>
+
+      <div class="comment-section">
+        <h4 class="comment-section-header">COMMENTS SECTION</h4>
+        <app-show-comments [post]="post"></app-show-comments>
+        <app-create-comment [post]="post"></app-create-comment>
+      </div>
+
+      <p></p>
+      <p></p>
+    </div>
+  </div>
+
+
+  <h1> TODO: dodac widok z up/down vote </h1>
+
+</div>

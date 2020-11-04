@@ -10,19 +10,19 @@
     </a>
 
     <div>
+      <button (click)="authService.logout()" class="float-right signup mr-2"> Logout</button>
+    </div>
+
+    <div>
       <a routerLink="/start" class="float-right signup mr-2">Go back to start</a>
     </div>
 
     <div>
-      <a routerLink="/create" class="float-right signup mr-2"> Create post</a>
-    </div>
-
-    <div>
-      <button (click)="authService.logout()" class="float-right login mr-2"> Logout </button>
-    </div>
-
-    <div>
       <a routerLink="/post" class="float-right signup mr-2"> Show posts </a>
+    </div>
+
+    <div>
+      <a routerLink="/create" class="float-right signup mr-2"> Create post</a>
     </div>
 
   </div>
@@ -46,7 +46,7 @@
     </div>
 
     <div>
-      <a routerLink="/login" class="float-right login mr-2">Login</a>
+      <a routerLink="/login" class="float-right signup mr-2">Login</a>
     </div>
 
   </div>
