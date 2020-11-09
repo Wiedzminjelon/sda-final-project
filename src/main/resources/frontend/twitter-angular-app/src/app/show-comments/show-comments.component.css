@@ -1,0 +1,13 @@
+
+.comment-container{
+  border-color: dodgerblue;
+  border-style: solid;
+  text-align: center;
+  width: auto;
+  margin: 5px;
+}
+
+.comment-section-header{
+  font-family: 'Montserrat', sans-serif;
+
+}

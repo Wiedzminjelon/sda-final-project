@@ -1,7 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from "@angular/forms";
 import {CommentService} from "../service/comment.service";
 import {ToastrService} from "ngx-toastr";
+import {AuthService} from "../auth/auth.service";
+import {PostModel} from "../models/post-model";
 
 @Component({
   selector: 'app-create-comment',
@@ -10,23 +12,28 @@ import {ToastrService} from "ngx-toastr";
 })
 
 export class CreateCommentComponent implements OnInit {
+  @Input() post:PostModel;
   newCommentForm: FormGroup;
-  newCommentPayload:{
+  newCommentPayload: {
     text: any;
     username: any;
     postId: any;
-};
+  };
 
   constructor(private commentService: CommentService,
-              private toastr: ToastrService) {
-    this.newCommentPayload = {
+              private toastr: ToastrService,
+              private authService: AuthService
+  ) {
+    this
+      .newCommentPayload = {
       text: '',
-      username:'',
-      postId:''
+      username: '',
+      postId: ''
     }
   }
 
-  ngOnInit(): void {
+  ngOnInit():
+    void {
     this.newCommentForm = new FormGroup({
       text: new FormControl(''),
       username: new FormControl(''),
@@ -37,8 +44,9 @@ export class CreateCommentComponent implements OnInit {
   newComment() {
     this.newCommentPayload = {
       text: this.newCommentForm.get('text').value,
-      username: this.newCommentForm.get('username').value,
-      postId: this.newCommentForm.get('postId').value
+      username: this.authService.getUserName(),
+      postId: this.post.id
+      // postId: this.newCommentForm.get('postId').value
     };
 
     this.commentService.newComment(this.newCommentPayload).subscribe(data => {

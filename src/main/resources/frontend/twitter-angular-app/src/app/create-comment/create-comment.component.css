@@ -1,0 +1,14 @@
+
+.create-comment-container {
+  text-align: center;
+  margin: 5px;
+}
+
+.create-comment-button {
+  border-style: solid;
+  background-color: yellowgreen;
+}
+
+#comment-text {
+  text-align: center;
+}

@@ -5,6 +5,7 @@ import {Router} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
 import {HttpClient} from "@angular/common/http";
 import {PostService} from "../service/post.service";
+import {AuthService} from "../auth/auth.service";
 
 
 @Component({
@@ -25,7 +26,8 @@ export class CreatePostComponent implements OnInit {
   constructor(private http: HttpClient,
               private toastr: ToastrService,
               private createPostService: PostService,
-              private router: Router) {
+              private router: Router,
+              private authService: AuthService) {
     this.newPostRequestPayload = {
       description: '',
       url: '',
@@ -48,7 +50,7 @@ export class CreatePostComponent implements OnInit {
       description: this.newPostForm.get('description').value,
       url: this.newPostForm.get('url').value,
       postName: this.newPostForm.get('postName').value,
-      username: this.newPostForm.get('username').value
+      username: this.authService.getUserName()
     };
 
     this.createPostService.newPost(this.newPostRequestPayload).subscribe(data => {
