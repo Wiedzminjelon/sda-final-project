@@ -23,6 +23,8 @@ import {PostService} from "./service/post.service";
 import {CommentService} from "./service/comment.service";
 import {CreateCommentComponent} from "./create-comment/create-comment.component";
 import {ShowCommentsComponent} from './show-comments/show-comments.component';
+import { AddVoteComponent } from './add-vote/add-vote.component';
+import { ShowVotesComponent } from './show-votes/show-votes.component';
 
 
 @NgModule({
@@ -39,7 +41,9 @@ import {ShowCommentsComponent} from './show-comments/show-comments.component';
     CreatePostComponent,
     ShowPostsComponent,
     CreateCommentComponent,
-    ShowCommentsComponent
+    ShowCommentsComponent,
+    AddVoteComponent,
+    ShowVotesComponent,
   ],
   imports: [
     BrowserModule,

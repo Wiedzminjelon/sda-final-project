@@ -17,6 +17,8 @@
       Time: {{post.created}}
       </span>
 
+      <app-add-vote [post]="post"></app-add-vote>
+
       <div class="comment-section">
         <h4 class="comment-section-header">COMMENTS SECTION</h4>
         <app-show-comments [post]="post"></app-show-comments>

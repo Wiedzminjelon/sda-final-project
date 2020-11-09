@@ -1,20 +1,23 @@
 <header>
-  <div *ngIf="authService.isLoggedIn()">
-    <a routerLink="/">
-      <img
-        src="https://st3.depositphotos.com/5142301/12930/v/950/depositphotos_129309942-stock-illustration-t-letter-logo-in-square.jpg"
-        class="t-icon">
-      <div class="logo-text">
-        Twitter 2.0
-      </div>
-    </a>
+  <div *ngIf="authService.isLoggedIn()" class="logged-in">
 
-    <div>
-      <button (click)="authService.logout()" class="float-right signup mr-2"> Logout</button>
+    <div class="logo-text-app">
+      <a routerLink="/">
+        <img
+          src="https://st3.depositphotos.com/5142301/12930/v/950/depositphotos_129309942-stock-illustration-t-letter-logo-in-square.jpg"
+          class="t-icon">
+        <div class="logo-text">
+          Twitter 2.0
+        </div>
+      </a>
     </div>
 
     <div>
-      <a routerLink="/start" class="float-right signup mr-2">Go back to start</a>
+      <button (click)="authService.logout()" class="float-right signup mr-2"> Logout </button>
+    </div>
+
+    <div>
+      <a routerLink="/start" class="float-right signup mr-2"> Go back to start </a>
     </div>
 
     <div>
@@ -27,29 +30,28 @@
 
   </div>
 
-  <div *ngIf="!authService.isLoggedIn()">
-    <a routerLink="/">
+  <div *ngIf="!authService.isLoggedIn()" class="not-logged-in">
+
+    <figure>
+      <a routerLink="/">
+        <p class="logo-text"> Twitter 2.0 </p>
+      </a>
       <img
         src="https://st3.depositphotos.com/5142301/12930/v/950/depositphotos_129309942-stock-illustration-t-letter-logo-in-square.jpg"
-        class="t-icon">
-      <div class="logo-text">
-        Twitter 2.0
-      </div>
-    </a>
+        alt="logo aplikacji" class="t-icon">
+    </figure>
 
-    <div>
-      <a routerLink="/start" class="float-right signup mr-2">Go back to start</a>
-    </div>
-
-    <div>
-      <a routerLink="/signup" class="float-right signup mr-2">Sign up</a>
-    </div>
-
-    <div>
-      <a routerLink="/login" class="float-right signup mr-2">Login</a>
-    </div>
-
+    <ul class="not-logged-in-menu">
+      <li>
+        <a routerLink="/start" class="signup">Go back to start</a>
+      </li>
+      <li>
+        <a routerLink="/signup" class="signup">Sign up</a>
+      </li>
+      <li>
+        <a routerLink="/login" class="signup">Login</a>
+      </li>
+    </ul>
   </div>
-
 
 </header>
