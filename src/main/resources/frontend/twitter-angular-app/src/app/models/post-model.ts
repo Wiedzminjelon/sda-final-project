@@ -6,5 +6,5 @@ export class PostModel {
   voteCount: number;
   username: string;
   created: string;
-
+  numberOfComments: number;
 }

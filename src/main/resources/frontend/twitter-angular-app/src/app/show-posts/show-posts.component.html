@@ -14,8 +14,12 @@
         Added by user: {{post.username}}
       </span>
       <span class="created">
-      Time: {{post.created}}
+      Time: {{post.created | date:'yyyy-MM-dd HH:mm:ss'}}
       </span>
+      <span>
+        Number of comments: {{post.numberOfComments}}
+      </span>
+
 
       <app-add-vote [post]="post"></app-add-vote>
 

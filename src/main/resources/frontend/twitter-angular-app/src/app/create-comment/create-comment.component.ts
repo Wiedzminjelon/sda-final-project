@@ -4,6 +4,7 @@ import {CommentService} from "../service/comment.service";
 import {ToastrService} from "ngx-toastr";
 import {AuthService} from "../auth/auth.service";
 import {PostModel} from "../models/post-model";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-create-comment',
@@ -12,7 +13,7 @@ import {PostModel} from "../models/post-model";
 })
 
 export class CreateCommentComponent implements OnInit {
-  @Input() post:PostModel;
+  @Input() post: PostModel;
   newCommentForm: FormGroup;
   newCommentPayload: {
     text: any;
@@ -22,7 +23,8 @@ export class CreateCommentComponent implements OnInit {
 
   constructor(private commentService: CommentService,
               private toastr: ToastrService,
-              private authService: AuthService
+              private authService: AuthService,
+              private router: Router
   ) {
     this
       .newCommentPayload = {
@@ -46,10 +48,10 @@ export class CreateCommentComponent implements OnInit {
       text: this.newCommentForm.get('text').value,
       username: this.authService.getUserName(),
       postId: this.post.id
-      // postId: this.newCommentForm.get('postId').value
     };
 
     this.commentService.newComment(this.newCommentPayload).subscribe(data => {
+      window.location.reload()
     }, () => {
       this.toastr.error('Adding comment failed! Please try again.')
     });
