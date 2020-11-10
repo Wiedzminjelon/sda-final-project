@@ -8,6 +8,7 @@ import socialmediaapp.twitterinspiredapp.dto.RefreshTokenRequest;
 import socialmediaapp.twitterinspiredapp.dto.RegisterRequest;
 import socialmediaapp.twitterinspiredapp.dto.SignUpResponse;
 import socialmediaapp.twitterinspiredapp.model.LoginRequest;
+import socialmediaapp.twitterinspiredapp.model.User;
 import socialmediaapp.twitterinspiredapp.service.AuthService;
 import socialmediaapp.twitterinspiredapp.service.RefreshTokenService;
 
@@ -53,5 +54,10 @@ public class AuthController {
     public ResponseEntity<String> logout (@Valid @RequestBody RefreshTokenRequest refreshTokenRequest){
         refreshTokenService.deleterefreshToken(refreshTokenRequest.getRefreshToken());
         return ResponseEntity.status(HttpStatus.OK).body("refresh Token deleted successfully!");
+    }
+
+    @GetMapping("/user")
+    public User getUser(@RequestBody String username){
+        return authService.getCurrentUser();
     }
 }

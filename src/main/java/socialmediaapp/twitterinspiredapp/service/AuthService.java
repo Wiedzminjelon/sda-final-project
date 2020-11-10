@@ -1,5 +1,6 @@
 package socialmediaapp.twitterinspiredapp.service;
 
+import org.springframework.cglib.core.Local;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,7 +23,9 @@ import socialmediaapp.twitterinspiredapp.security.JwtProvider;
 
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
+import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -65,7 +68,7 @@ public class AuthService {
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setAccountType(ACCOUNT_TYPE.PRIVATE);
-        user.setCreated(Instant.now());
+        user.setCreated(Timestamp.valueOf(LocalDateTime.now()));
         user.setEnabled(false);
 
         userRepository.save(user);

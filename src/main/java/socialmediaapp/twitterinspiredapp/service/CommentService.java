@@ -33,17 +33,19 @@ public class CommentService {
 
     @Transactional
     public CommentDto save(CommentDto commentDto) {
-        postRepository.findById(commentDto.getPostId())
+        Post post = postRepository.findById(commentDto.getPostId())
                 .orElseThrow(() -> new PostNotFoundException("Post not found!"));
         Comment comment = mapCommentDtoToComment(commentDto);
         commentRepository.save(comment);
+        post.setNumberOfComments(post.getNumberOfComments() + 1);
+        postRepository.save(post);
         return mapCommentToCommentDto(comment);
     }
 
     public List<CommentDto> getAllCommentsForPost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("Post not Found!"));
-        return commentRepository.findByPost(post)
+        return commentRepository.findByPost_Id(postId)
                 .stream()
                 .map(this::mapCommentToCommentDto)
                 .collect(Collectors.toList());

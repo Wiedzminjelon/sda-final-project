@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {LogInRequestPayload} from "./log-in-request.payload";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {AuthService} from "../auth/auth.service";
+import {AuthService} from "../auth.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
 
@@ -17,7 +17,10 @@ export class LogInComponent implements OnInit {
   isError: boolean;
   registerSuccessMessage: string;
 
-  constructor(private authService: AuthService, private activatedRoute: ActivatedRoute, private router: Router, private toastr: ToastrService) {
+  constructor(private authService: AuthService,
+              private activatedRoute: ActivatedRoute,
+              private router: Router,
+              private toastr: ToastrService) {
     this.loginRequestPayload = {
       username: '',
       password: ''

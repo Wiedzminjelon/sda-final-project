@@ -63,6 +63,7 @@ public class PostService {
                 .url(postDto.getUrl())
                 .user(userRepository.findByUsername(postDto.getUsername())
                         .orElseThrow(() -> new SpringTwitterException("User not found!")))
+                .numberOfComments(0)
                 .build();
     }
 
@@ -75,6 +76,7 @@ public class PostService {
                 .id(post.getId())
                 .voteCount(post.getVoteCount())
                 .created(post.getCreated())
+                .numberOfComments(post.getNumberOfComments())
                 .build();
     }
 

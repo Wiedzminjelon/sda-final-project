@@ -4,7 +4,7 @@ import {AuthService} from "./auth/auth.service";
 import {BehaviorSubject, Observable, throwError} from "rxjs";
 import {catchError, filter, switchMap, take} from "rxjs/operators";
 import {error} from "@angular/compiler/src/util";
-import {LoginResponse} from "./log-in/log-in-response.payload";
+import {LoginResponse} from "./auth/log-in/log-in-response.payload";
 
 @Injectable({
   providedIn: 'root'

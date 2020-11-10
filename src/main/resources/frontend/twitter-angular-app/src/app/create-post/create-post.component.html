@@ -11,16 +11,9 @@
       <span *ngIf="descriptionValidation('description')">Please enter a description</span>
     </div>
 
-
-
     <div>
       <label for="post" class="post">Post:</label><p></p>
       <textarea type="text" cols="50" rows="5" [formControlName]="'postName'" id="post"></textarea>
-    </div>
-
-    <div>
-      <label for="username">username:</label>
-      <input type="text" [formControlName]="'username'" id="username" >
     </div>
 
     <div>

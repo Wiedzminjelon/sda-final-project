@@ -29,4 +29,6 @@ public class PostDto {
     private String username;
 
     private Timestamp created;
+
+    private Integer numberOfComments;
 }

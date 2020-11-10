@@ -10,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import java.sql.Timestamp;
 import java.time.Instant;
 
 @Entity
@@ -32,7 +33,7 @@ public class User {
     @NotEmpty(message = "Email is required")
     private String email;
 
-    private Instant created;
+    private Timestamp created;
     private boolean enabled;
 
     @Enumerated(EnumType.STRING)
