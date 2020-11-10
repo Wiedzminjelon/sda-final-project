@@ -31,7 +31,7 @@ export class AuthService {
   }
 
 
-  login(loginRequestPayload: LogInRequestPayload):Observable<boolean> {
+  login(loginRequestPayload: LogInRequestPayload): Observable<boolean> {
     return this.http.post<LoginResponse>(angularHost + '/login', loginRequestPayload).pipe(map(data => {
       this.localStorage.store('authenticationToken', data.authenticationToken)
       this.localStorage.store('username', data.username)
@@ -42,7 +42,7 @@ export class AuthService {
     }));
   }
 
-  getJwtToken(){
+  getJwtToken() {
     return this.localStorage.retrieve('authenticationToken');
   }
 
@@ -73,7 +73,7 @@ export class AuthService {
 
   logout() {
     this.http.post(angularHost + 'auth/logout', this.refreshTokenPayload,
-      { responseType: 'text' })
+      {responseType: 'text'})
       .subscribe(data => {
         console.log(data);
       }, error => {
@@ -85,5 +85,8 @@ export class AuthService {
     this.localStorage.clear('expiresAt');
   }
 
+  getCurrentUser(username) {
+    return this.http.get(angularHost + "/user", username);
+  }
 }
 

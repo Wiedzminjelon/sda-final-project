@@ -8,9 +8,7 @@ import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.Instant;
 
 @Data
 @Builder
@@ -37,5 +35,7 @@ public class Post{
     private User user;
 
     private Timestamp created;
+
+    private Integer numberOfComments;
 
 }

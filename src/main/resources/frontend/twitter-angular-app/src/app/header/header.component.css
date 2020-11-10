@@ -11,7 +11,7 @@ header{
   padding: 8px 8px 8px 8px;
   width: 50px;
   border-radius: 40%;
-  
+
 }
 
 .logo-text{
@@ -24,8 +24,8 @@ header{
   align-content: flex-end;
   margin-bottom: 2em;
   padding: 1em;
-  
-  
+
+
 }
 
 .logo{
@@ -66,19 +66,20 @@ header{
   justify-content: flex-start;
 }
 
-
-.not-logged-in{
-display: flex;
-justify-content: space-between;
+.not-logged-in, .logged-in{
+display: contents;
 }
 
-.not-logged-in-menu{
+
+
+.not-logged-in-menu, .logged-in-menu{
   display: flex;
   justify-content: flex-end;
-
+  margin: 1em;
 }
 
-.not-logged-in-menu li{
+.not-logged-in-menu li, .logged-in-menu{
   list-style-type: none;
 }
+
 

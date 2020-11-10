@@ -9,7 +9,7 @@ import socialmediaapp.twitterinspiredapp.enums.VOTE_TYPE;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.Instant;
+import java.sql.Timestamp;
 
 @Entity
 @NoArgsConstructor
@@ -32,6 +32,6 @@ public class Vote {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    private Instant createDate;
+    private Timestamp created;
 
 }

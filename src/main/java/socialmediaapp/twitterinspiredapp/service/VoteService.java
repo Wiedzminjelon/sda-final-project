@@ -13,7 +13,8 @@ import socialmediaapp.twitterinspiredapp.repository.PostRepository;
 import socialmediaapp.twitterinspiredapp.repository.UserRepository;
 import socialmediaapp.twitterinspiredapp.repository.VoteRepository;
 
-import java.time.Instant;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static socialmediaapp.twitterinspiredapp.enums.VOTE_TYPE.UPVOTE;
@@ -64,7 +65,7 @@ public class VoteService {
                 .post(postRepository.findById(voteDto.getPostId()).
                         orElseThrow(()-> new SpringTwitterException("Post not found!")))
                 .user(userRepository.findById(voteDto.getUserId()).orElseThrow(()->new SpringTwitterException("User not found!")))
-                .createDate(Instant.now())
+                .created(Timestamp.valueOf(LocalDateTime.now()))
                 .build();
     }
 

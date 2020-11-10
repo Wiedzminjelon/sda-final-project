@@ -1,32 +1,27 @@
 <header>
   <div *ngIf="authService.isLoggedIn()" class="logged-in">
 
-    <div class="logo-text-app">
+    <figure>
       <a routerLink="/">
-        <img
-          src="https://st3.depositphotos.com/5142301/12930/v/950/depositphotos_129309942-stock-illustration-t-letter-logo-in-square.jpg"
-          class="t-icon">
-        <div class="logo-text">
-          Twitter 2.0
-        </div>
+        <p class="logo-text"> Twitter 2.0 </p>
       </a>
-    </div>
+      <img src="https://st3.depositphotos.com/5142301/12930/v/950/depositphotos_129309942-stock-illustration-t-letter-logo-in-square.jpg" alt="logo-icon" class="t-icon">
+    </figure>
 
-    <div>
-      <button (click)="authService.logout()" class="float-right signup mr-2"> Logout </button>
-    </div>
-
-    <div>
-      <a routerLink="/start" class="float-right signup mr-2"> Go back to start </a>
-    </div>
-
-    <div>
-      <a routerLink="/post" class="float-right signup mr-2"> Show posts </a>
-    </div>
-
-    <div>
-      <a routerLink="/create" class="float-right signup mr-2"> Create post</a>
-    </div>
+    <ul class="logged-in-menu">
+      <li>
+        <button (click)="authService.logout()" class="float-right signup mr-2"> Logout </button>
+      </li>
+      <li>
+        <a routerLink="/start" class="float-right signup mr-2"> Go back to start </a>
+      </li>
+      <li>
+        <a routerLink="/post" class="float-right signup mr-2"> Show posts </a>
+      </li>
+      <li>
+        <a routerLink="/create" class="float-right signup mr-2"> Create post</a>
+      </li>
+    </ul>
 
   </div>
 
@@ -38,7 +33,7 @@
       </a>
       <img
         src="https://st3.depositphotos.com/5142301/12930/v/950/depositphotos_129309942-stock-illustration-t-letter-logo-in-square.jpg"
-        alt="logo aplikacji" class="t-icon">
+        alt="logo-icon" class="t-icon">
     </figure>
 
     <ul class="not-logged-in-menu">

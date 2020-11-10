@@ -33,10 +33,12 @@ public class CommentService {
 
     @Transactional
     public CommentDto save(CommentDto commentDto) {
-        postRepository.findById(commentDto.getPostId())
+        Post post = postRepository.findById(commentDto.getPostId())
                 .orElseThrow(() -> new PostNotFoundException("Post not found!"));
         Comment comment = mapCommentDtoToComment(commentDto);
         commentRepository.save(comment);
+        post.setNumberOfComments(post.getNumberOfComments() + 1);
+        postRepository.save(post);
         return mapCommentToCommentDto(comment);
     }
 

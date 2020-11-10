@@ -23,7 +23,8 @@ export class AddVoteComponent implements OnInit {
               private toastr: ToastrService) {
     this.votePayload = {
       voteType: undefined,
-      postId: undefined
+      postId: undefined,
+      userId: undefined
     }
   }
 
