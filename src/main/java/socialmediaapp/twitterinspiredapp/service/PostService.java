@@ -18,12 +18,11 @@ import java.util.stream.Collectors;
 public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    private final AuthService authService;
 
-    public PostService(PostRepository postRepository, UserRepository userRepository, AuthService authService) {
+
+    public PostService(PostRepository postRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
-        this.authService = authService;
     }
 
     @Transactional
@@ -40,7 +39,7 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public List<PostDto> getAllPostsForUser(String username) {
+    public List<PostDto> getAllPostsForUsername(String username) {
         return postRepository.findAllByUser_Username(username)
                 .stream()
                 .map(PostService::mapPostToPostDto)
@@ -68,16 +67,18 @@ public class PostService {
     }
 
     static PostDto mapPostToPostDto(Post post) {
-        return PostDto.builder()
-                .username(post.getUser().getUsername())
+        PostDto.PostDtoBuilder postDtoBuilder = PostDto.builder()
                 .url(post.getUrl())
                 .description(post.getDescription())
                 .postName(post.getPostName())
                 .id(post.getId())
                 .voteCount(post.getVoteCount())
                 .created(post.getCreated())
-                .numberOfComments(post.getNumberOfComments())
-                .build();
+                .numberOfComments(post.getNumberOfComments());
+        if (post.getUser() != null){
+            postDtoBuilder.username(post.getUser().getUsername());
+        }
+        return postDtoBuilder.build();
     }
 
 }

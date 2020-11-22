@@ -13,6 +13,7 @@ import socialmediaapp.twitterinspiredapp.service.AuthService;
 import socialmediaapp.twitterinspiredapp.service.RefreshTokenService;
 
 import javax.mail.MessagingException;
+import javax.persistence.Table;
 import javax.validation.Valid;
 
 @RestController
