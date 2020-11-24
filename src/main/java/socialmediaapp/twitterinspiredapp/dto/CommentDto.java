@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import socialmediaapp.twitterinspiredapp.model.User;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -17,7 +18,7 @@ public class CommentDto {
     private Long id;
     private Long postId;
     private String text;
-    private String username;
+    private User user;
     private Timestamp created;
 }
 

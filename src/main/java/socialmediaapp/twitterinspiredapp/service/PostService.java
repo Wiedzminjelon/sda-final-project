@@ -27,9 +27,9 @@ public class PostService {
 
     @Transactional
     public PostDto save(PostDto postDto) {
-        Post post = mapPostDtoToPost(postDto);
-        postRepository.save(post);
-        return mapPostToPostDto(post);
+        Post postToSave = mapPostDtoToPost(postDto);
+        Post savedPost = postRepository.save(postToSave);
+        return mapPostToPostDto(savedPost);
     }
 
     public List<PostDto> getAllPosts() {
@@ -47,21 +47,21 @@ public class PostService {
     }
 
     public PostDto getPostById(Long id) {
-        Post post = postRepository.findById(id).orElseThrow(()-> new SpringTwitterException("Post Not Found"));
+        Post post = postRepository.findById(id)
+                .orElseThrow(()-> new SpringTwitterException("Post Not Found"));
         return mapPostToPostDto(post);
 
     }
 
 
-    private Post mapPostDtoToPost(PostDto postDto) {
+    static Post mapPostDtoToPost(PostDto postDto) {
         return Post.builder()
                 .postName(postDto.getPostName())
                 .description(postDto.getDescription())
                 .voteCount(0)
                 .created(Timestamp.valueOf(LocalDateTime.now()))
                 .url(postDto.getUrl())
-                .user(userRepository.findByUsername(postDto.getUsername())
-                        .orElseThrow(() -> new SpringTwitterException("User not found!")))
+                .user(postDto.getUser())
                 .numberOfComments(0)
                 .build();
     }
@@ -76,7 +76,7 @@ public class PostService {
                 .created(post.getCreated())
                 .numberOfComments(post.getNumberOfComments());
         if (post.getUser() != null){
-            postDtoBuilder.username(post.getUser().getUsername());
+            postDtoBuilder.user(post.getUser());
         }
         return postDtoBuilder.build();
     }
