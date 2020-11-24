@@ -30,10 +30,10 @@ public class CommentsController {
 
     }
 
-    @GetMapping("/by-user/{userName}")
-    public ResponseEntity<List<CommentDto>> getAllCommentsForUser(@PathVariable String userName) {
+    @GetMapping("/by-user/{id}")
+    public ResponseEntity<List<CommentDto>> getAllCommentsForUser(@PathVariable Long id) {
         return ResponseEntity.ok()
-                .body(commentService.getAllCommentForUser(userName));
+                .body(commentService.getAllCommentForUser(id));
 
     }
 

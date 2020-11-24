@@ -18,19 +18,18 @@ import java.util.stream.Collectors;
 public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    private final AuthService authService;
 
-    public PostService(PostRepository postRepository, UserRepository userRepository, AuthService authService) {
+
+    public PostService(PostRepository postRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
-        this.authService = authService;
     }
 
     @Transactional
     public PostDto save(PostDto postDto) {
-        Post post = mapPostDtoToPost(postDto);
-        postRepository.save(post);
-        return mapPostToPostDto(post);
+        Post postToSave = mapPostDtoToPost(postDto);
+        Post savedPost = postRepository.save(postToSave);
+        return mapPostToPostDto(savedPost);
     }
 
     public List<PostDto> getAllPosts() {
@@ -40,7 +39,7 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public List<PostDto> getAllPostsForUser(String username) {
+    public List<PostDto> getAllPostsForUsername(String username) {
         return postRepository.findAllByUser_Username(username)
                 .stream()
                 .map(PostService::mapPostToPostDto)
@@ -48,36 +47,38 @@ public class PostService {
     }
 
     public PostDto getPostById(Long id) {
-        Post post = postRepository.findById(id).orElseThrow(()-> new SpringTwitterException("Post Not Found"));
+        Post post = postRepository.findById(id)
+                .orElseThrow(()-> new SpringTwitterException("Post Not Found"));
         return mapPostToPostDto(post);
 
     }
 
 
-    private Post mapPostDtoToPost(PostDto postDto) {
+    static Post mapPostDtoToPost(PostDto postDto) {
         return Post.builder()
                 .postName(postDto.getPostName())
                 .description(postDto.getDescription())
                 .voteCount(0)
                 .created(Timestamp.valueOf(LocalDateTime.now()))
                 .url(postDto.getUrl())
-                .user(userRepository.findByUsername(postDto.getUsername())
-                        .orElseThrow(() -> new SpringTwitterException("User not found!")))
+                .user(postDto.getUser())
                 .numberOfComments(0)
                 .build();
     }
 
     static PostDto mapPostToPostDto(Post post) {
-        return PostDto.builder()
-                .username(post.getUser().getUsername())
+        PostDto.PostDtoBuilder postDtoBuilder = PostDto.builder()
                 .url(post.getUrl())
                 .description(post.getDescription())
                 .postName(post.getPostName())
                 .id(post.getId())
                 .voteCount(post.getVoteCount())
                 .created(post.getCreated())
-                .numberOfComments(post.getNumberOfComments())
-                .build();
+                .numberOfComments(post.getNumberOfComments());
+        if (post.getUser() != null){
+            postDtoBuilder.user(post.getUser());
+        }
+        return postDtoBuilder.build();
     }
 
 }

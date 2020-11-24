@@ -4,6 +4,8 @@ package socialmediaapp.twitterinspiredapp.dto;
 import lombok.*;
 import socialmediaapp.twitterinspiredapp.model.User;
 
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 
@@ -25,8 +27,8 @@ public class PostDto {
 
     private Integer voteCount;
 
-    @NotBlank
-    private String username;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
     private Timestamp created;
 

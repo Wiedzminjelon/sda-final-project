@@ -32,7 +32,7 @@ public class PostsController {
 
     @GetMapping("/all-by-user/{username}")
     public ResponseEntity<List<PostDto>> getAllPostsForUser(@PathVariable String username) {
-        return new ResponseEntity<>(postService.getAllPostsForUser(username), OK);
+        return new ResponseEntity<>(postService.getAllPostsForUsername(username), OK);
     }
 
     @GetMapping("/{id}")
