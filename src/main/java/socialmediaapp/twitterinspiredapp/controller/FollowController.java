@@ -22,14 +22,14 @@ public class FollowController {
         return new ResponseEntity<>(followService.follow(followDto), HttpStatus.OK);
     }
 
-    @GetMapping("/all-for-user/{username}")
-    public ResponseEntity<List<FollowDto>> getAllFollowersForUser(@PathVariable String username) {
-        return new ResponseEntity<>(followService.getAllFollowersForUser(username), HttpStatus.OK);
+    @GetMapping("/all-for-user/{userId}")
+    public ResponseEntity<List<FollowDto>> getAllFollowers(@PathVariable long userId) {
+        return new ResponseEntity<>(followService.getAllFollowers(userId), HttpStatus.OK);
     }
 
-    @GetMapping("/all-by-user/{username}")
-    public ResponseEntity<List<FollowDto>> getAllFollowedByUser(@PathVariable String username) {
-        return new ResponseEntity<>(followService.getAllFollowedByUser(username), HttpStatus.OK);
+    @GetMapping("/all-by-user/{userId}")
+    public ResponseEntity<List<FollowDto>> getAllFollowed(@PathVariable long userId) {
+        return new ResponseEntity<>(followService.getAllFollowed(userId), HttpStatus.OK);
     }
 
 }

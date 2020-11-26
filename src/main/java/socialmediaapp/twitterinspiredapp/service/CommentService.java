@@ -1,11 +1,9 @@
 package socialmediaapp.twitterinspiredapp.service;
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import socialmediaapp.twitterinspiredapp.dto.CommentDto;
 import socialmediaapp.twitterinspiredapp.exceptions.PostNotFoundException;
 
-import socialmediaapp.twitterinspiredapp.exceptions.SpringTwitterException;
 import socialmediaapp.twitterinspiredapp.exceptions.UserNotFoundException;
 import socialmediaapp.twitterinspiredapp.model.Comment;
 import socialmediaapp.twitterinspiredapp.model.Post;
@@ -34,46 +32,47 @@ public class CommentService {
 
     @Transactional
     public CommentDto save(CommentDto commentDto) {
-        Post post = postRepository.findById(commentDto.getPostId())
+        Post post = postRepository.findById(commentDto.getPost().getId())
                 .orElseThrow(() -> new PostNotFoundException("Post not found!"));
-        Comment comment = mapCommentDtoToComment(commentDto);
-        commentRepository.save(comment);
+        Comment savedComment = commentRepository.save(fromCommentDto(commentDto));
+
         post.setNumberOfComments(post.getNumberOfComments() + 1);
-        postRepository.save(post);
-        return mapCommentToCommentDto(comment);
+        Post savedPost = postRepository.save(post);
+        return toCommentDto(savedComment);
     }
 
     public List<CommentDto> getAllCommentsForPost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("Post not Found!"));
-        return commentRepository.findByPost_Id(postId)
+        return commentRepository.findByPost(post)
                 .stream()
-                .map(this::mapCommentToCommentDto)
+                .map(this::toCommentDto)
                 .collect(Collectors.toList());
     }
 
-    public List<CommentDto> getAllCommentForUser(Long id) {
-        User user = userRepository.findById(id).
+    public List<CommentDto> getAllCommentForUser(Long userId) {
+        User user = userRepository.findById(userId).
                 orElseThrow(() -> new UserNotFoundException("User not found!"));
         return commentRepository.getAllByUser(user)
                 .stream()
-                .map(this::mapCommentToCommentDto)
+                .map(this::toCommentDto)
                 .collect(Collectors.toList());
     }
 
-    private Comment mapCommentDtoToComment(CommentDto commentDto) {
+    static Comment fromCommentDto(CommentDto commentDto) {
         return Comment.builder()
+                .id(commentDto.getId())
                 .text(commentDto.getText())
                 .created(Timestamp.valueOf(LocalDateTime.now()))
-                .user(userRepository.findByUsername(commentDto.getUser().getUsername()).orElseThrow(() -> new SpringTwitterException("User not found!")))
-                .post(postRepository.findById(commentDto.getPostId()).orElseThrow(() -> new SpringTwitterException("Post not found!")))
+                .user(commentDto.getUser())
+                .post(commentDto.getPost())
                 .build();
     }
 
-    private CommentDto mapCommentToCommentDto(Comment comment) {
+    private CommentDto toCommentDto(Comment comment) {
         return CommentDto.builder()
                 .id(comment.getId())
-                .postId(comment.getPost().getId())
+                .post(comment.getPost())
                 .text(comment.getText())
                 .user(comment.getUser())
                 .created(comment.getCreated())

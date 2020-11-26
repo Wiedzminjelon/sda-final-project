@@ -1,17 +1,18 @@
 package socialmediaapp.twitterinspiredapp.service;
 
 import lombok.Data;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import socialmediaapp.twitterinspiredapp.dto.FollowDto;
 import socialmediaapp.twitterinspiredapp.exceptions.SpringTwitterException;
+import socialmediaapp.twitterinspiredapp.exceptions.UserNotFoundException;
 import socialmediaapp.twitterinspiredapp.model.Follow;
 import socialmediaapp.twitterinspiredapp.model.User;
 import socialmediaapp.twitterinspiredapp.repository.FollowRepository;
 import socialmediaapp.twitterinspiredapp.repository.UserRepository;
 
 import javax.transaction.Transactional;
-import java.time.Instant;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,59 +29,59 @@ public class FollowService {
 
     @Transactional
     public FollowDto follow(FollowDto followDto) {
-        User followingUser = userRepository.findByUsername(followDto.getFollowingUserName())
-                .orElseThrow(()-> new SpringTwitterException("User not found!"));
-        User followedUser = userRepository.findByUsername(followDto.getFollowedUserName())
-                .orElseThrow(()-> new SpringTwitterException("User not found!"));
+        User following = userRepository.findById(followDto.getFollowing().getUserId())
+                .orElseThrow(() -> new UserNotFoundException("User not found!"));
+        User followed = userRepository.findById(followDto.getFollowed().getUserId())
+                .orElseThrow(() -> new UserNotFoundException("User not found!"));
 
-        if (followedUser.equals(followingUser)){
+        if (followed.equals(following)) {
             throw new SpringTwitterException("You cannot follow yourself!");
         }
 
-        Follow follow = mapFollowDtoToFollow(followDto);
+        Follow follow = fromFollowDto(followDto);
         followRepository.save(follow);
 
         return followDto;
     }
 
-    public List<FollowDto> getAllFollowersForUser(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+    public List<FollowDto> getAllFollowers(long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found!"));
 
-        return followRepository.findAllByFollowed_UserId(user.getUserId())
+        return followRepository.findAllByFollowed_UserId(userId)
                 .stream()
-                .map(this::mapFollowToFollowDto)
+                .map(this::toFollowDto)
                 .collect(Collectors.toList());
     }
 
-    public List<FollowDto> getAllFollowedByUser(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+    public List<FollowDto> getAllFollowed(long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found!"));
 
-        return followRepository.findAllByFollowing_UserId(user.getUserId())
+        return followRepository.findAllByFollowing_UserId(userId)
                 .stream()
-                .map(this::mapFollowToFollowDto)
+                .map(this::toFollowDto)
                 .collect(Collectors.toList());
     }
 
 
-    private FollowDto mapFollowToFollowDto(Follow follow) {
+    private FollowDto toFollowDto(Follow follow) {
         return FollowDto.builder()
-                .followedUserName(follow.getFollowed().getUsername())
-                .followingUserName(follow.getFollowing().getUsername())
                 .id(follow.getId())
+                .following(follow.getFollowing())
+                .followed(follow.getFollowed())
                 .build();
     }
 
-    private Follow mapFollowDtoToFollow(FollowDto followDto) {
-        User following = userRepository.findByUsername(followDto.getFollowingUserName())
+    private Follow fromFollowDto(FollowDto followDto) {
+        User following = userRepository.findById(followDto.getFollowing().getUserId())
                 .orElseThrow(() -> new SpringTwitterException("User not found!"));
 
-        User followed = userRepository.findByUsername(followDto.getFollowedUserName())
+        User followed = userRepository.findById(followDto.getFollowed().getUserId())
                 .orElseThrow(() -> new SpringTwitterException("User not found!"));
 
         return Follow.builder()
-                .followDate(Instant.now())
+                .followDate(Timestamp.valueOf(LocalDateTime.now()))
                 .following(following)
                 .followed(followed)
                 .id(followDto.getId())

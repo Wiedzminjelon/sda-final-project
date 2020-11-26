@@ -4,7 +4,9 @@ import org.springframework.stereotype.Service;
 import socialmediaapp.twitterinspiredapp.dto.PostDto;
 
 import socialmediaapp.twitterinspiredapp.exceptions.SpringTwitterException;
+import socialmediaapp.twitterinspiredapp.exceptions.UserNotFoundException;
 import socialmediaapp.twitterinspiredapp.model.Post;
+import socialmediaapp.twitterinspiredapp.model.User;
 import socialmediaapp.twitterinspiredapp.repository.PostRepository;
 import socialmediaapp.twitterinspiredapp.repository.UserRepository;
 
@@ -27,34 +29,36 @@ public class PostService {
 
     @Transactional
     public PostDto save(PostDto postDto) {
-        Post postToSave = mapPostDtoToPost(postDto);
+        Post postToSave = fromPostDto(postDto);
         Post savedPost = postRepository.save(postToSave);
-        return mapPostToPostDto(savedPost);
+        return toPostDto(savedPost);
     }
 
     public List<PostDto> getAllPosts() {
         return postRepository.findAll()
                 .stream()
-                .map(PostService::mapPostToPostDto)
+                .map(PostService::toPostDto)
                 .collect(Collectors.toList());
     }
 
-    public List<PostDto> getAllPostsForUsername(String username) {
-        return postRepository.findAllByUser_Username(username)
+    public List<PostDto> getAllPostsForUser(long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found!"));
+        return postRepository.findAllByUser(user)
                 .stream()
-                .map(PostService::mapPostToPostDto)
+                .map(PostService::toPostDto)
                 .collect(Collectors.toList());
     }
 
     public PostDto getPostById(Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(()-> new SpringTwitterException("Post Not Found"));
-        return mapPostToPostDto(post);
+        return toPostDto(post);
 
     }
 
 
-    static Post mapPostDtoToPost(PostDto postDto) {
+    static Post fromPostDto(PostDto postDto) {
         return Post.builder()
                 .postName(postDto.getPostName())
                 .description(postDto.getDescription())
@@ -66,7 +70,7 @@ public class PostService {
                 .build();
     }
 
-    static PostDto mapPostToPostDto(Post post) {
+    static PostDto toPostDto(Post post) {
         PostDto.PostDtoBuilder postDtoBuilder = PostDto.builder()
                 .url(post.getUrl())
                 .description(post.getDescription())
