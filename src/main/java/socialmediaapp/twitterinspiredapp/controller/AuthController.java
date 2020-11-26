@@ -13,7 +13,6 @@ import socialmediaapp.twitterinspiredapp.service.AuthService;
 import socialmediaapp.twitterinspiredapp.service.RefreshTokenService;
 
 import javax.mail.MessagingException;
-import javax.persistence.Table;
 import javax.validation.Valid;
 
 @RestController
@@ -58,7 +57,7 @@ public class AuthController {
     }
 
     @GetMapping("/user")
-    public User getUser(@RequestBody String username){
+    public User getUser(){
         return authService.getCurrentUser();
     }
 }

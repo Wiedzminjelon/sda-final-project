@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import socialmediaapp.twitterinspiredapp.model.User;
+
+import java.sql.Timestamp;
 
 
 @Data
@@ -14,8 +17,10 @@ public class FollowDto {
 
     private Long id;
 
-    private String followingUserName;
+    private User following;
 
-    private String followedUserName;
+    private User followed;
+
+    private Timestamp followDate;
 
 }

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.Instant;
 
 @Entity
@@ -25,6 +26,6 @@ public class Follow {
     @ManyToOne
     private User followed;
 
-    private Instant followDate;
+    private Timestamp followDate;
 
 }

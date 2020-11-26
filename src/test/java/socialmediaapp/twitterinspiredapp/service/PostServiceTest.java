@@ -78,40 +78,43 @@ public class PostServiceTest {
 
 
     @Test
-    public void when_getAllPostsForUsername_then_returnOnePost() {
+    public void when_getAllPostsForUser_then_returnOnePost() {
         //given
         User user = createUserWithUsername("username");
+        user.setUserId(1L);
 
-        Post post = Post.builder()
-                .id(1L)
-                .postName("postname")
-                .user(user)
-                .build();
+        Post post = createPostForUser(user);
+        post.setId(1L);
         //when
-        when(postRepository.findAllByUser_Username(any())).thenReturn(Collections.singletonList(post));
-        List<PostDto> posts = postService.getAllPostsForUsername("username");
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(postRepository.findAllByUser(user)).thenReturn(Collections.singletonList(post));
+        List<PostDto> posts = postService.getAllPostsForUser(user.getUserId());
         //then
         assertThat(posts).isNotNull();
         assertThat(posts).isNotEmpty();
         assertThat(posts.get(0).getUser().getUsername()).isEqualTo("username");
-        assertThat(posts.get(0).getPostName()).isEqualTo("postname");
+        assertThat(posts.get(0).getDescription()).isEqualTo("description");
         assertThat(posts.get(0).getId() == 1L);
     }
 
     @Test
-    public void when_getAllPostsForUsername_then_returnPostsForUser() {
+    public void when_getAllPostsForUser_then_returnPostsForUser() {
         //given
         User user1 = createUserWithUsername("user1");
+        user1.setUserId(1L);
         User user2 = createUserWithUsername("user2");
+        user2.setUserId(2L);
 
         Post post = createPostForUser(user1);
         Post post2 = createPostForUser(user1);
         Post post3 = createPostForUser(user2);
         //when
-        when(postRepository.findAllByUser_Username(user1.getUsername())).thenReturn(Arrays.asList(post, post2));
-        when(postRepository.findAllByUser_Username(user2.getUsername())).thenReturn(Collections.singletonList(post3));
-        List<PostDto> postsForUser1 = postService.getAllPostsForUsername("user1");
-        List<PostDto> postsForUser2 = postService.getAllPostsForUsername("user2");
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
+        when(userRepository.findById(2L)).thenReturn(Optional.of(user2));
+        when(postRepository.findAllByUser(user1)).thenReturn(Arrays.asList(post, post2));
+        when(postRepository.findAllByUser(user2)).thenReturn(Collections.singletonList(post3));
+        List<PostDto> postsForUser1 = postService.getAllPostsForUser(user1.getUserId());
+        List<PostDto> postsForUser2 = postService.getAllPostsForUser(user2.getUserId());
         //then
         assertThat(postsForUser1).isNotNull();
         assertThat(postsForUser2).isNotNull();
@@ -135,9 +138,8 @@ public class PostServiceTest {
                 .url("")
                 .build();
         //when
-        when(postRepository.save(any())).thenReturn(PostService.mapPostDtoToPost(postDto));
+        when(postRepository.save(any())).thenReturn(PostService.fromPostDto(postDto));
         PostDto savedPost = postService.save(postDto);
-
         //then
         assertThat(savedPost).isNotNull();
         assertThat(savedPost.getPostName()).isEqualTo("postname");
@@ -163,7 +165,7 @@ public class PostServiceTest {
     }
 
     @Test(expected = RuntimeException.class)
-    public void when_getPostById_then_returnThrowsRuntimeException() {
+    public void when_getPostById_then_returnThrowsException() {
         //given
         //when
         PostDto foundPost = postService.getPostById(1L);

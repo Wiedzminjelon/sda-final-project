@@ -40,8 +40,36 @@ public class CommentServiceTest {
     }
 
     @Test
-    public void save() {
+    public void when_saveComment_then_returnOneCommentDto() {
+        //given
+        User testuser3 = new User();
+        testuser3.setUserId(1L);
+
+        Post post = Post.builder()
+                .id(1L)
+                .user(testuser3)
+                .numberOfComments(0)
+                .build();
+
+        CommentDto commentDto = CommentDto.builder()
+                .id(1L)
+                .user(testuser3)
+                .post(post)
+                .text("comment")
+                .build();
+        //when
+        when(postRepository.findById(1L)).thenReturn(java.util.Optional.of(post));
+        when(commentRepository.save(any())).thenReturn(CommentService.fromCommentDto(commentDto));
+        CommentDto savedComment = commentService.save(commentDto);
+        //then
+        assertThat(savedComment).isNotNull();
+        assertThat(savedComment.getId() == 1L);
+        assertThat(savedComment.getUser()).isEqualTo(testuser3);
+        assertThat(savedComment.getText()).isEqualTo("comment");
+        assertThat(savedComment.getPost()).isEqualTo(post);
+        assertThat(post.getNumberOfComments() == 1);
     }
+
 
     @Test
     public void when_getAllCommentsForPost_then_returnEmptyList() {
@@ -50,7 +78,7 @@ public class CommentServiceTest {
         Post postForUser = createPostForUser(testuser1, 1L);
         //when
         when(postRepository.findById(1L)).thenReturn(java.util.Optional.ofNullable(postForUser));
-        when(commentRepository.findByPost_Id(any())).thenReturn(new ArrayList<>());
+        when(commentRepository.findByPost(any())).thenReturn(new ArrayList<>());
         List<CommentDto> allCommentsForPost = commentService.getAllCommentsForPost(1L);
         //then
         assertThat(allCommentsForPost).isEmpty();
@@ -66,7 +94,7 @@ public class CommentServiceTest {
         Comment commentForPost2 = createCommentForPost(testuser1, postForUser, "second comment");
         //when
         when(postRepository.findById(2L)).thenReturn(java.util.Optional.ofNullable(postForUser));
-        when(commentRepository.findByPost_Id(2L)).thenReturn(Arrays.asList(commentForPost1, commentForPost2));
+        when(commentRepository.findByPost(postForUser)).thenReturn(Arrays.asList(commentForPost1, commentForPost2));
         List<CommentDto> allCommentsForPost = commentService.getAllCommentsForPost(2L);
         //then
         assertThat(allCommentsForPost).isNotEmpty();
@@ -143,4 +171,5 @@ public class CommentServiceTest {
         user.setUsername(username);
         return user;
     }
+
 }
