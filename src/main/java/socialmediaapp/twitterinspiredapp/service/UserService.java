@@ -11,7 +11,7 @@ public interface UserService {
 
     SignUpResponse signup(RegisterRequest registerRequest);
 
-    void verifyAccount(String token);
+    boolean verifyAccount(String token);
 
 
     Optional<User> getUserById(Long userId);

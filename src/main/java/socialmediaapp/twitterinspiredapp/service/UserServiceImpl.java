@@ -64,14 +64,19 @@ public class UserServiceImpl implements UserService {
         } catch (MessagingException messagingException) {
             throw new SpringTwitterException("There was a problem with sending an activation email. Please register again or contact support");
         }
+
         return new SignUpResponse("User registered successfully!");
     }
 
-    public void verifyAccount(String token) {
-        Optional<VerificationToken> verificationToken = verificationTokenRepository.findByToken(token);
-        verificationToken
-                .orElseThrow(() -> new SpringTwitterException("Invalid Token"));
-        fetchUserAndEnable(verificationToken.get());
+    public boolean verifyAccount(String token) {
+        Optional<VerificationToken> optionalVerificationToken = verificationTokenRepository.findByToken(token);
+
+        if (optionalVerificationToken.isPresent()) {
+            VerificationToken verificationToken = optionalVerificationToken.get();
+            fetchUserAndEnable(verificationToken);
+            return true;
+        }
+        return false;
     }
 
     public Optional<User> getUserById(Long userId) {
@@ -101,12 +106,17 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username).isPresent();
     }
 
-    private void fetchUserAndEnable(VerificationToken verificationToken) {
+    private boolean fetchUserAndEnable(VerificationToken verificationToken) {
         String username = verificationToken.getUser().getUsername();
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException("User with " + username + "not found"));
-        user.setEnabled(true);
-        userRepository.save(user);
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setEnabled(true);
+            userRepository.save(user);
+            return true;
+        }
+        return false;
     }
 
 }

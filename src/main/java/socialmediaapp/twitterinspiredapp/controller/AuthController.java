@@ -31,14 +31,12 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<SignUpResponse> signup(@RequestBody @Valid RegisterRequest registerRequest) {
-        userService.signup(registerRequest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(userService.signup(registerRequest), HttpStatus.CREATED);
     }
 
     @GetMapping("/accountVerification/{token}")
     public ResponseEntity<String> verifyAccount(@PathVariable String token) {
-        userService.verifyAccount(token);
-        return new ResponseEntity<>("Account activation successfully!", HttpStatus.OK);
+        return userService.verifyAccount(token) ? new ResponseEntity<>("Account activation successfully!", HttpStatus.OK) : new ResponseEntity<>("Account activation failed.", HttpStatus.OK);
     }
 
     @PostMapping("/login")
