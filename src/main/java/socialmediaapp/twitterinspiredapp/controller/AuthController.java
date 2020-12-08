@@ -10,7 +10,7 @@ import socialmediaapp.twitterinspiredapp.dto.SignUpResponse;
 import socialmediaapp.twitterinspiredapp.model.LoginRequest;
 import socialmediaapp.twitterinspiredapp.model.User;
 import socialmediaapp.twitterinspiredapp.service.AuthenticationService;
-import socialmediaapp.twitterinspiredapp.service.UserService;
+import socialmediaapp.twitterinspiredapp.service.UserServiceImpl;
 import socialmediaapp.twitterinspiredapp.service.RefreshTokenService;
 
 import javax.mail.MessagingException;
@@ -21,12 +21,12 @@ import javax.validation.Valid;
 
 public class AuthController {
 
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
     private final RefreshTokenService refreshTokenService;
     private final AuthenticationService authenticationService;
 
-    public AuthController(UserService userService, RefreshTokenService refreshTokenService, AuthenticationService authenticationService) {
-        this.userService = userService;
+    public AuthController(UserServiceImpl userServiceImpl, RefreshTokenService refreshTokenService, AuthenticationService authenticationService) {
+        this.userServiceImpl = userServiceImpl;
         this.refreshTokenService = refreshTokenService;
         this.authenticationService = authenticationService;
     }
@@ -35,13 +35,13 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<SignUpResponse> signup(@RequestBody @Valid RegisterRequest registerRequest) throws MessagingException {
-        userService.signup(registerRequest);
+        userServiceImpl.signup(registerRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/accountVerification/{token}")
     public ResponseEntity<String> verifyAccount(@PathVariable String token) {
-        userService.verifyAccount(token);
+        userServiceImpl.verifyAccount(token);
         return new ResponseEntity<>("Account activation successfully!", HttpStatus.OK);
     }
 
@@ -63,6 +63,6 @@ public class AuthController {
 
     @GetMapping("/user")
     public User getUser(){
-        return userService.getCurrentUser();
+        return userServiceImpl.getCurrentUser();
     }
 }
