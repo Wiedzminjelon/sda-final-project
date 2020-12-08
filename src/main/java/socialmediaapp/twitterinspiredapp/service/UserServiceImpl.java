@@ -67,11 +67,11 @@ public class UserServiceImpl implements UserService {
         return new SignUpResponse("User registered successfully!");
     }
 
-    public void verifyAccount(String token) {
+    public User verifyAccount(String token) {
         Optional<VerificationToken> verificationToken = verificationTokenRepository.findByToken(token);
         verificationToken
                 .orElseThrow(() -> new SpringTwitterException("Invalid Token"));
-        fetchUserAndEnable(verificationToken.get());
+        return fetchUserAndEnable(verificationToken.get());
     }
 
     public Optional<User> getUserById(Long userId) {
@@ -101,12 +101,12 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username).isPresent();
     }
 
-    private void fetchUserAndEnable(VerificationToken verificationToken) {
+    private User fetchUserAndEnable(VerificationToken verificationToken) {
         String username = verificationToken.getUser().getUsername();
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("User with " + username + "not found"));
         user.setEnabled(true);
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
 }
