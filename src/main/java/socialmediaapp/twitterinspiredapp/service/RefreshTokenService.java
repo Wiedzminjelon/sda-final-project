@@ -31,7 +31,7 @@ public class RefreshTokenService {
                 orElseThrow(() -> new SpringTwitterException("Invalid refresh token"));
     }
 
-    public void deleterefreshToken(String token){
+    public void deleteRefreshToken(String token){
         refreshTokenRepository.deleteByToken(token);
     }
 }

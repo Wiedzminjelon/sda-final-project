@@ -53,13 +53,13 @@ public class VoteService {
             post.setVoteCount(post.getVoteCount() - 1);
         }
 
-        voteRepository.save(mapVoteDtoToVote(voteDto));
+        voteRepository.save(fromVoteDto(voteDto));
         postRepository.save(post);
 
         return voteDto;
     }
 
-    private Vote mapVoteDtoToVote(VoteDto voteDto) {
+    private Vote fromVoteDto(VoteDto voteDto) {
         return Vote.builder()
                 .vote_type(voteDto.getVote_type())
                 .post(postRepository.findById(voteDto.getPostId()).
