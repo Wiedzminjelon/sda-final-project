@@ -1,37 +1,11 @@
 package socialmediaapp.twitterinspiredapp.service;
 
-import org.springframework.stereotype.Service;
-import socialmediaapp.twitterinspiredapp.exceptions.SpringTwitterException;
 import socialmediaapp.twitterinspiredapp.model.RefreshToken;
-import socialmediaapp.twitterinspiredapp.repository.RefreshTokenRepository;
 
-import javax.transaction.Transactional;
-import java.time.Instant;
-import java.util.UUID;
+public interface RefreshTokenService {
+    RefreshToken generateRefreshToken();
 
-@Service
-@Transactional
-public class RefreshTokenService {
+    RefreshToken validateRefreshToken(String token);
 
-    private final RefreshTokenRepository refreshTokenRepository;
-
-    public RefreshTokenService(RefreshTokenRepository refreshTokenRepository) {
-        this.refreshTokenRepository = refreshTokenRepository;
-    }
-
-    public RefreshToken generateRefreshToken(){
-        RefreshToken refreshToken = new RefreshToken();
-        refreshToken.setToken(UUID.randomUUID().toString());
-        refreshToken.setCreatedDate(Instant.now());
-        return refreshTokenRepository.save(refreshToken);
-    }
-
-    public RefreshToken validateRefreshToken(String token){
-        return refreshTokenRepository.findByToken(token).
-                orElseThrow(() -> new SpringTwitterException("Invalid refresh token"));
-    }
-
-    public void deleteRefreshToken(String token){
-        refreshTokenRepository.deleteByToken(token);
-    }
+    void deleteRefreshToken(String token);
 }

@@ -15,16 +15,16 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class RefreshTokenServiceTest {
+public class RefreshTokenServiceImplTest {
 
-    RefreshTokenService refreshTokenService;
+    RefreshTokenServiceImpl refreshTokenServiceImpl;
 
     @Mock
     RefreshTokenRepository refreshTokenRepository;
 
     @Before
     public void init(){
-        refreshTokenService = new RefreshTokenService(refreshTokenRepository);
+        refreshTokenServiceImpl = new RefreshTokenServiceImpl(refreshTokenRepository);
     }
 
     @Test
@@ -35,7 +35,7 @@ public class RefreshTokenServiceTest {
         refreshToken.setToken(UUID.randomUUID().toString());
         //when
        when(refreshTokenRepository.save(any())).thenReturn(refreshToken);
-        RefreshToken refreshToken2 = refreshTokenService.generateRefreshToken();
+        RefreshToken refreshToken2 = refreshTokenServiceImpl.generateRefreshToken();
         //then
         assertThat(refreshToken2.equals(refreshToken));
         assertThat(refreshToken2).isNotNull();

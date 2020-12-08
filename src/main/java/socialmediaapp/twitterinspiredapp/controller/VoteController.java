@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import socialmediaapp.twitterinspiredapp.dto.VoteDto;
 import socialmediaapp.twitterinspiredapp.service.VoteService;
+import socialmediaapp.twitterinspiredapp.service.VoteServiceImpl;
 
 @RestController
 @RequestMapping("api/votes/")

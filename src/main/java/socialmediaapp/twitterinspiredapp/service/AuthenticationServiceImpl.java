@@ -18,12 +18,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
-    private final RefreshTokenService refreshTokenService;
+    private final RefreshTokenServiceImpl refreshTokenServiceImpl;
 
-    public AuthenticationServiceImpl(AuthenticationManager authenticationManager, JwtProvider jwtProvider, RefreshTokenService refreshTokenService) {
+    public AuthenticationServiceImpl(AuthenticationManager authenticationManager, JwtProvider jwtProvider, RefreshTokenServiceImpl refreshTokenServiceImpl) {
         this.authenticationManager = authenticationManager;
         this.jwtProvider = jwtProvider;
-        this.refreshTokenService = refreshTokenService;
+        this.refreshTokenServiceImpl = refreshTokenServiceImpl;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String token = jwtProvider.generateToken(authenticate);
         return AuthenticationResponse.builder()
                 .authenticationToken(token)
-                .refreshToken(refreshTokenService.generateRefreshToken().getToken())
+                .refreshToken(refreshTokenServiceImpl.generateRefreshToken().getToken())
                 .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
                 .username(loginRequest.getUsername())
                 .build();
@@ -42,7 +42,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
-        RefreshToken refreshToken = refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
+        RefreshToken refreshToken = refreshTokenServiceImpl.validateRefreshToken(refreshTokenRequest.getRefreshToken());
         String token = jwtProvider.generateTokenWithUsername(refreshTokenRequest.getUsername());
         return AuthenticationResponse.builder()
                 .authenticationToken(token)
