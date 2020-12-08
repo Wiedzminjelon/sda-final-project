@@ -1,7 +1,6 @@
 package socialmediaapp.twitterinspiredapp.service;
 
 import org.junit.Test;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,10 +21,10 @@ import static org.junit.Assert.assertTrue;
 @SpringBootTest
 @RunWith(SpringRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class PostServiceIntegrationTest {
+public class PostServiceImplIntegrationTest {
 
     @Autowired
-    PostService postService;
+    PostServiceImpl postServiceImpl;
 
     @Autowired
     UserRepository userRepository;
@@ -33,7 +32,7 @@ public class PostServiceIntegrationTest {
 
     @Test
     public void dependencyMustBeInjected() {
-        assertThat(postService).isNotNull();
+        assertThat(postServiceImpl).isNotNull();
         assertThat(userRepository).isNotNull();
     }
 
@@ -42,7 +41,7 @@ public class PostServiceIntegrationTest {
         User user = saveUser("marek");
         PostDto dto = createPostDto(user);
 
-        PostDto post = postService.save(dto);
+        PostDto post = postServiceImpl.save(dto);
 
         assertThat(post).isNotNull();
         assertThat(post.getDescription()).isEqualTo("description");
@@ -57,10 +56,10 @@ public class PostServiceIntegrationTest {
         User user = saveUser("marcin");
         PostDto postDto = createPostDto(user);
 
-        PostDto post = postService.save(postDto);
-        PostDto post2 = postService.save(postDto);
+        PostDto post = postServiceImpl.save(postDto);
+        PostDto post2 = postServiceImpl.save(postDto);
 
-        List<PostDto> allPosts = postService.getAllPosts();
+        List<PostDto> allPosts = postServiceImpl.getAllPosts();
 
         assertThat(allPosts).isNotEmpty();
         assertThat(allPosts.get(0)).isNotNull();

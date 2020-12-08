@@ -22,9 +22,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class FollowServiceTest {
+public class FollowServiceImplTest {
 
-    FollowService followService;
+    FollowServiceImpl followServiceImpl;
 
     @Mock
     UserRepository userRepository;
@@ -33,7 +33,7 @@ public class FollowServiceTest {
 
     @Before
     public void init() {
-        followService = new FollowService(followRepository, userRepository);
+        followServiceImpl = new FollowServiceImpl(followRepository, userRepository);
     }
 
     @Test
@@ -44,7 +44,7 @@ public class FollowServiceTest {
         //when
         when(userRepository.findById(1L)).thenReturn(java.util.Optional.of(user));
         when(followRepository.findAllByFollowed_UserId(user.getUserId())).thenReturn(new ArrayList<>());
-        List<FollowDto> allFollowersForUser = followService.getAllFollowers(1L);
+        List<FollowDto> allFollowersForUser = followServiceImpl.getAllFollowers(1L);
         //then
         assertThat(allFollowersForUser.isEmpty());
         assertThat(allFollowersForUser).isNotNull();
@@ -67,7 +67,7 @@ public class FollowServiceTest {
         when(userRepository.findById(1L)).thenReturn(java.util.Optional.of(user1));
         when(followRepository.findAllByFollowed_UserId(user1.getUserId())).
                 thenReturn(Collections.singletonList(follow));
-        List<FollowDto> allFollowersForUser = followService.getAllFollowers(1L);
+        List<FollowDto> allFollowersForUser = followServiceImpl.getAllFollowers(1L);
         //then
         assertThat(allFollowersForUser.isEmpty());
         assertThat(allFollowersForUser).isNotNull();
@@ -94,7 +94,7 @@ public class FollowServiceTest {
         //when
         when(userRepository.findById(1L)).thenReturn(java.util.Optional.of(user2));
         when(followRepository.findAllByFollowing_UserId(1L)).thenReturn(Collections.singletonList(follow));
-        List<FollowDto> allFollowed = followService.getAllFollowed(1L);
+        List<FollowDto> allFollowed = followServiceImpl.getAllFollowed(1L);
         //then
         assertThat(allFollowed).isNotEmpty();
         assertThat(allFollowed).isNotNull();
@@ -108,7 +108,7 @@ public class FollowServiceTest {
     public void when_getAllFollowers_thenThrowException() {
         //given
         //when
-        when(followService.getAllFollowers(1L)).thenReturn(new ArrayList<>());
+        when(followServiceImpl.getAllFollowers(1L)).thenReturn(new ArrayList<>());
         //then
     }
 
@@ -116,7 +116,7 @@ public class FollowServiceTest {
     public void when_getAllFollowed_thenThrowException() {
         //given
         //when
-        when(followService.getAllFollowed(1L)).thenReturn(new ArrayList<>());
+        when(followServiceImpl.getAllFollowed(1L)).thenReturn(new ArrayList<>());
         //then
     }
 
@@ -136,7 +136,7 @@ public class FollowServiceTest {
         //when
         when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
         when(userRepository.findById(2L)).thenReturn(Optional.of(user2));
-        FollowDto follow = followService.follow(followDto);
+        FollowDto follow = followServiceImpl.follow(followDto);
         //then
         assertThat(follow.getId() == 1L);
         assertThat(follow.getFollowed().getUserId() == 2L);
@@ -155,7 +155,7 @@ public class FollowServiceTest {
                 .build();
         //when
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        followService.follow(followDto);
+        followServiceImpl.follow(followDto);
         //then
     }
 
