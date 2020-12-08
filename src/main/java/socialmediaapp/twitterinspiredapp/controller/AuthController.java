@@ -9,7 +9,8 @@ import socialmediaapp.twitterinspiredapp.dto.RegisterRequest;
 import socialmediaapp.twitterinspiredapp.dto.SignUpResponse;
 import socialmediaapp.twitterinspiredapp.model.LoginRequest;
 import socialmediaapp.twitterinspiredapp.model.User;
-import socialmediaapp.twitterinspiredapp.service.AuthService;
+import socialmediaapp.twitterinspiredapp.service.AuthenticationService;
+import socialmediaapp.twitterinspiredapp.service.UserService;
 import socialmediaapp.twitterinspiredapp.service.RefreshTokenService;
 
 import javax.mail.MessagingException;
@@ -20,34 +21,38 @@ import javax.validation.Valid;
 
 public class AuthController {
 
-    public AuthController(AuthService authService, RefreshTokenService refreshTokenService) {
-        this.authService = authService;
+    private final UserService userService;
+    private final RefreshTokenService refreshTokenService;
+    private final AuthenticationService authenticationService;
+
+    public AuthController(UserService userService, RefreshTokenService refreshTokenService, AuthenticationService authenticationService) {
+        this.userService = userService;
         this.refreshTokenService = refreshTokenService;
+        this.authenticationService = authenticationService;
     }
 
-    private final AuthService authService;
-    private final RefreshTokenService refreshTokenService;
+
 
     @PostMapping("/signup")
     public ResponseEntity<SignUpResponse> signup(@RequestBody @Valid RegisterRequest registerRequest) throws MessagingException {
-        authService.signup(registerRequest);
+        userService.signup(registerRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/accountVerification/{token}")
     public ResponseEntity<String> verifyAccount(@PathVariable String token) {
-        authService.verifyAccount(token);
+        userService.verifyAccount(token);
         return new ResponseEntity<>("Account activation successfully!", HttpStatus.OK);
     }
 
     @PostMapping("/login")
     public AuthenticationResponse login(@RequestBody LoginRequest loginRequest) {
-        return authService.login(loginRequest);
+        return authenticationService.login(loginRequest);
     }
 
     @PostMapping("refresh/token")
     public AuthenticationResponse refreshTokens(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
-        return authService.refreshToken(refreshTokenRequest);
+        return authenticationService.refreshToken(refreshTokenRequest);
     }
 
     @PostMapping("/logout")
@@ -58,6 +63,6 @@ public class AuthController {
 
     @GetMapping("/user")
     public User getUser(){
-        return authService.getCurrentUser();
+        return userService.getCurrentUser();
     }
 }

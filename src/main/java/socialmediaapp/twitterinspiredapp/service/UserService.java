@@ -1,62 +1,45 @@
 package socialmediaapp.twitterinspiredapp.service;
 
-import org.springframework.cglib.core.Local;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import socialmediaapp.twitterinspiredapp.dto.AuthenticationResponse;
-import socialmediaapp.twitterinspiredapp.dto.RefreshTokenRequest;
 import socialmediaapp.twitterinspiredapp.dto.RegisterRequest;
 import socialmediaapp.twitterinspiredapp.dto.SignUpResponse;
 import socialmediaapp.twitterinspiredapp.enums.ACCOUNT_TYPE;
 import socialmediaapp.twitterinspiredapp.exceptions.SpringTwitterException;
-import socialmediaapp.twitterinspiredapp.model.LoginRequest;
-import socialmediaapp.twitterinspiredapp.model.NotificationEmail;
-import socialmediaapp.twitterinspiredapp.model.User;
-import socialmediaapp.twitterinspiredapp.model.VerificationToken;
+import socialmediaapp.twitterinspiredapp.exceptions.UserNotFoundException;
+import socialmediaapp.twitterinspiredapp.model.*;
 import socialmediaapp.twitterinspiredapp.repository.UserRepository;
 import socialmediaapp.twitterinspiredapp.repository.VerificationTokenRepository;
-import socialmediaapp.twitterinspiredapp.security.JwtProvider;
 
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class AuthService {
+public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final VerificationTokenRepository verificationTokenRepository;
     private final MailService mailService;
-    private final AuthenticationManager authenticationManager;
-    private final JwtProvider jwtProvider;
-    private final RefreshTokenService refreshTokenService;
 
 
-    public AuthService(PasswordEncoder passwordEncoder, UserRepository userRepository, VerificationTokenRepository verificationTokenRepository,
-                       MailService mailService, AuthenticationManager authenticationManager, JwtProvider jwtProvider, RefreshTokenService refreshTokenService) {
+    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, VerificationTokenRepository verificationTokenRepository,
+                       MailService mailService) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.verificationTokenRepository = verificationTokenRepository;
         this.mailService = mailService;
-        this.authenticationManager = authenticationManager;
-        this.jwtProvider = jwtProvider;
-        this.refreshTokenService = refreshTokenService;
     }
 
-    @Transactional
     public User getCurrentUser() {
         org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.
                 getContext().getAuthentication().getPrincipal();
         return userRepository.findByUsername(principal.getUsername())
-                .orElseThrow(() -> new SpringTwitterException("User name not found - " + principal.getUsername()));
+                .orElseThrow(() -> new UserNotFoundException("User name not found - " + principal.getUsername()));
     }
 
     @Transactional
@@ -117,34 +100,10 @@ public class AuthService {
     private void fetchUserAndEnable(VerificationToken verificationToken) {
         String username = verificationToken.getUser().getUsername();
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new SpringTwitterException("User with " + username + "not found"));
+                .orElseThrow(() -> new UserNotFoundException("User with " + username + "not found"));
         user.setEnabled(true);
         userRepository.save(user);
     }
 
-
-    public AuthenticationResponse login(LoginRequest loginRequest) {
-        Authentication authenticate = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authenticate);
-        String token = jwtProvider.generateToken(authenticate);
-        return AuthenticationResponse.builder()
-                .authenticationToken(token)
-                .refreshToken(refreshTokenService.generateRefreshToken().getToken())
-                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
-                .username(loginRequest.getUsername())
-                .build();
-    }
-
-    public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
-        refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
-        String token = jwtProvider.generateTokenWithUsername(refreshTokenRequest.getUsername());
-        return AuthenticationResponse.builder()
-                .authenticationToken(token)
-                .refreshToken(refreshTokenRequest.getRefreshToken())
-                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
-                .username(refreshTokenRequest.getUsername())
-                .build();
-    }
 }
 

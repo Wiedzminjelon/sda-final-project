@@ -26,19 +26,19 @@ public class VoteService {
     private final VoteRepository voteRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-    private final AuthService authService;
+    private final UserService userService;
 
-    public VoteService(VoteRepository voteRepository, PostRepository postRepository, UserRepository userRepository, AuthService authService) {
+    public VoteService(VoteRepository voteRepository, PostRepository postRepository, UserRepository userRepository, UserService userService) {
         this.voteRepository = voteRepository;
         this.postRepository = postRepository;
         this.userRepository = userRepository;
-        this.authService = authService;
+        this.userService = userService;
     }
 
     public VoteDto vote(VoteDto voteDto) {
         Post post = postRepository.findById(voteDto.getPostId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT, "Post with this ID not found"));
-        User user = authService.getUserById(voteDto.getUserId()).
+        User user = userService.getUserById(voteDto.getUserId()).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT, "User with this ID not found"));
 
         Optional<Vote> vote = voteRepository

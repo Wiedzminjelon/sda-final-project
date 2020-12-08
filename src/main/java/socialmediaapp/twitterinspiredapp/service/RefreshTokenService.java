@@ -1,6 +1,5 @@
 package socialmediaapp.twitterinspiredapp.service;
 
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import socialmediaapp.twitterinspiredapp.exceptions.SpringTwitterException;
 import socialmediaapp.twitterinspiredapp.model.RefreshToken;
@@ -27,9 +26,9 @@ public class RefreshTokenService {
         return refreshTokenRepository.save(refreshToken);
     }
 
-    public void validateRefreshToken(String token){
-        refreshTokenRepository.findByToken(token).
-                orElseThrow(()->new SpringTwitterException("Invalid refresh token"));
+    public RefreshToken validateRefreshToken(String token){
+        return refreshTokenRepository.findByToken(token).
+                orElseThrow(() -> new SpringTwitterException("Invalid refresh token"));
     }
 
     public void deleterefreshToken(String token){
