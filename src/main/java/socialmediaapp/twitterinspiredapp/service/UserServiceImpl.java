@@ -6,8 +6,7 @@ import org.springframework.stereotype.Service;
 import socialmediaapp.twitterinspiredapp.dto.RegisterRequest;
 import socialmediaapp.twitterinspiredapp.dto.SignUpResponse;
 import socialmediaapp.twitterinspiredapp.enums.ACCOUNT_TYPE;
-import socialmediaapp.twitterinspiredapp.exceptions.SpringTwitterException;
-import socialmediaapp.twitterinspiredapp.exceptions.UserNotFoundException;
+import socialmediaapp.twitterinspiredapp.exceptions.*;
 import socialmediaapp.twitterinspiredapp.model.*;
 import socialmediaapp.twitterinspiredapp.repository.UserRepository;
 import socialmediaapp.twitterinspiredapp.repository.VerificationTokenRepository;
@@ -44,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     public SignUpResponse signup(RegisterRequest registerRequest) {
-        userAndEmailValidator(registerRequest);
+        validateRegisterRequest(registerRequest);
 
         User user = new User();
         user.setUsername(registerRequest.getUsername());
@@ -79,9 +78,7 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
-    public Optional<User> getUserById(Long userId) {
-        return userRepository.findById(userId);
-    }
+    public Optional<User> getUserById(Long userId) { return userRepository.findById(userId); }
 
     private String generateVerificationToken(User user) {
         String token = UUID.randomUUID().toString();
@@ -92,15 +89,7 @@ public class UserServiceImpl implements UserService {
         return token;
     }
 
-    private void userAndEmailValidator(RegisterRequest registerRequest) {
-        if (emailExist(registerRequest.getEmail()) || userExist(registerRequest.getUsername())) {
-            throw new SpringTwitterException("Username or email already exist!");
-        }
-    }
-
-    private boolean emailExist(String email) {
-        return userRepository.findByEmail(email).isPresent();
-    }
+    private boolean emailExist(String email) { return userRepository.findByEmail(email).isPresent(); }
 
     private boolean userExist(String username) {
         return userRepository.findByUsername(username).isPresent();
@@ -117,6 +106,19 @@ public class UserServiceImpl implements UserService {
             return true;
         }
         return false;
+    }
+
+    private boolean validateRegisterRequest(RegisterRequest registerRequest) {
+        if (emailExist(registerRequest.getEmail())) {
+            throw new EmailExistsException("Username or email already exist!");
+        }
+        if (userExist(registerRequest.getUsername())){
+            throw new UsernameExistsException("User with this name already exists.");
+        }
+        if (!registerRequest.getPassword().equals(registerRequest.getConfirmedPassword())){
+            throw  new PasswordNotMatchException("Passwords not identical!");
+        }
+        return true;
     }
 
 }
