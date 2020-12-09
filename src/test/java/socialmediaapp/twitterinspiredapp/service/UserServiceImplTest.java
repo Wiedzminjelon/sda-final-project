@@ -7,7 +7,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import socialmediaapp.twitterinspiredapp.dto.RegisterRequest;
-import socialmediaapp.twitterinspiredapp.dto.SignUpResponse;
 import socialmediaapp.twitterinspiredapp.exceptions.EmailExistsException;
 import socialmediaapp.twitterinspiredapp.exceptions.PasswordNotMatchException;
 import socialmediaapp.twitterinspiredapp.exceptions.UsernameExistsException;
@@ -53,23 +52,6 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void when_signup_thenReturnCorrectSignupResponse() {
-        //given
-        RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.setUsername("username");
-        registerRequest.setPassword("pass");
-        registerRequest.setConfirmedPassword("pass");
-        registerRequest.setEmail("email@email.com");
-
-        //when
-        SignUpResponse signup = userService.signup(registerRequest);
-
-        //then
-        assertNotNull(signup);
-        assertEquals("User registered successfully!", signup.getResponse());
-    }
-
-    @Test
     public void when_signup_thenSaveUser() {
         //given
         RegisterRequest registerRequest = new RegisterRequest();
@@ -78,11 +60,17 @@ public class UserServiceImplTest {
         registerRequest.setConfirmedPassword("pass");
         registerRequest.setEmail("email@email.com");
 
+        User user = userService.createUser(registerRequest);
+
         //when
-        SignUpResponse signup = userService.signup(registerRequest);
+        when(userRepository.save(any())).thenReturn(user);
+        User userSaved = userService.signup(registerRequest);
 
         //then
-        assertThat(signup.getResponse().equals("User registered successfully!"));
+        assertThat(userSaved).isNotNull();
+        assertFalse(userSaved.isEnabled());
+        assertThat(userSaved.getUsername().equals("username"));
+        assertThat(userSaved.getEmail().equals("email@email.com"));
 
     }
 
@@ -96,7 +84,7 @@ public class UserServiceImplTest {
         registerRequest.setEmail("email@email.com");
 
         //when
-        SignUpResponse signup = userService.signup(registerRequest);
+        User userSaved = userService.signup(registerRequest);
     }
 
     @Test(expected = UsernameExistsException.class)
@@ -113,7 +101,7 @@ public class UserServiceImplTest {
 
         //when
         when(userRepository.findByUsername(any())).thenReturn(Optional.of(user));
-        SignUpResponse signup = userService.signup(registerRequest);
+        User userSaved = userService.signup(registerRequest);
     }
 
     @Test(expected = EmailExistsException.class)
@@ -130,7 +118,7 @@ public class UserServiceImplTest {
 
         //when
         when(userRepository.findByEmail(any())).thenReturn(Optional.of(user));
-        SignUpResponse signup = userService.signup(registerRequest);
+        User userSaved = userService.signup(registerRequest);
     }
 
 

@@ -4,7 +4,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import socialmediaapp.twitterinspiredapp.dto.RegisterRequest;
-import socialmediaapp.twitterinspiredapp.dto.SignUpResponse;
 import socialmediaapp.twitterinspiredapp.enums.ACCOUNT_TYPE;
 import socialmediaapp.twitterinspiredapp.exceptions.*;
 import socialmediaapp.twitterinspiredapp.model.*;
@@ -43,12 +42,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public SignUpResponse signup(RegisterRequest registerRequest) {
+    public User signup(RegisterRequest registerRequest) {
         validateRegisterRequest(registerRequest);
 
         User user = createUser(registerRequest);
 
-        userRepository.save(user);
         String token = generateVerificationToken(user);
 
         try {
@@ -58,8 +56,7 @@ public class UserServiceImpl implements UserService {
         } catch (MessagingException messagingException) {
             throw new SpringTwitterException("There was a problem with sending an activation email. Please register again or contact support");
         }
-
-        return new SignUpResponse("User registered successfully!");
+        return userRepository.save(user);
     }
 
 
@@ -119,7 +116,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @NotNull
-    private User createUser(RegisterRequest registerRequest) {
+    public User createUser(RegisterRequest registerRequest) {
         User user = new User();
         user.setUsername(registerRequest.getUsername());
         user.setEmail(registerRequest.getEmail());

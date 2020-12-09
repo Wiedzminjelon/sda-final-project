@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import socialmediaapp.twitterinspiredapp.dto.AuthenticationResponse;
 import socialmediaapp.twitterinspiredapp.dto.RefreshTokenRequest;
 import socialmediaapp.twitterinspiredapp.dto.RegisterRequest;
-import socialmediaapp.twitterinspiredapp.dto.SignUpResponse;
 import socialmediaapp.twitterinspiredapp.model.LoginRequest;
 import socialmediaapp.twitterinspiredapp.model.User;
 import socialmediaapp.twitterinspiredapp.service.*;
@@ -30,7 +29,7 @@ public class AuthController {
 
 
     @PostMapping("/signup")
-    public ResponseEntity<SignUpResponse> signup(@RequestBody @Valid RegisterRequest registerRequest) {
+    public ResponseEntity<User> signup(@RequestBody @Valid RegisterRequest registerRequest) {
         return new ResponseEntity<>(userService.signup(registerRequest), HttpStatus.CREATED);
     }
 
