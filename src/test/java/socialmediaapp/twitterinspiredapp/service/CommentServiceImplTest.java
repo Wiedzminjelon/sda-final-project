@@ -23,9 +23,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CommentServiceTest {
+public class CommentServiceImplTest {
 
-    CommentService commentService;
+    CommentServiceImpl commentServiceImpl;
 
     @Mock
     private PostRepository postRepository;
@@ -36,7 +36,7 @@ public class CommentServiceTest {
 
     @Before
     public void init() {
-        commentService = new CommentService(postRepository, userRepository, commentRepository);
+        commentServiceImpl = new CommentServiceImpl(postRepository, userRepository, commentRepository);
     }
 
     @Test
@@ -59,8 +59,8 @@ public class CommentServiceTest {
                 .build();
         //when
         when(postRepository.findById(1L)).thenReturn(java.util.Optional.of(post));
-        when(commentRepository.save(any())).thenReturn(CommentService.fromCommentDto(commentDto));
-        CommentDto savedComment = commentService.save(commentDto);
+        when(commentRepository.save(any())).thenReturn(CommentServiceImpl.fromCommentDto(commentDto));
+        CommentDto savedComment = commentServiceImpl.save(commentDto);
         //then
         assertThat(savedComment).isNotNull();
         assertThat(savedComment.getId() == 1L);
@@ -79,7 +79,7 @@ public class CommentServiceTest {
         //when
         when(postRepository.findById(1L)).thenReturn(java.util.Optional.ofNullable(postForUser));
         when(commentRepository.findByPost(any())).thenReturn(new ArrayList<>());
-        List<CommentDto> allCommentsForPost = commentService.getAllCommentsForPost(1L);
+        List<CommentDto> allCommentsForPost = commentServiceImpl.getAllCommentsForPost(1L);
         //then
         assertThat(allCommentsForPost).isEmpty();
         assertThat(allCommentsForPost).isNotNull();
@@ -95,7 +95,7 @@ public class CommentServiceTest {
         //when
         when(postRepository.findById(2L)).thenReturn(java.util.Optional.ofNullable(postForUser));
         when(commentRepository.findByPost(postForUser)).thenReturn(Arrays.asList(commentForPost1, commentForPost2));
-        List<CommentDto> allCommentsForPost = commentService.getAllCommentsForPost(2L);
+        List<CommentDto> allCommentsForPost = commentServiceImpl.getAllCommentsForPost(2L);
         //then
         assertThat(allCommentsForPost).isNotEmpty();
         assertThat(allCommentsForPost).isNotNull();
@@ -109,7 +109,7 @@ public class CommentServiceTest {
     public void when_getAllCommentsForPost_then_throwPostNotFoundException() {
         //given
         //when
-        List<CommentDto> allCommentsForPost = commentService.getAllCommentsForPost(1L);
+        List<CommentDto> allCommentsForPost = commentServiceImpl.getAllCommentsForPost(1L);
         //then
     }
 
@@ -122,7 +122,7 @@ public class CommentServiceTest {
         //when
         when(commentRepository.getAllByUser(user)).thenReturn(new ArrayList<>());
         when(userRepository.findById(1L)).thenReturn(java.util.Optional.of(user));
-        List<CommentDto> allCommentForUsername = commentService.getAllCommentForUser(1L);
+        List<CommentDto> allCommentForUsername = commentServiceImpl.getAllCommentsForUser(1L);
         //then
         assertThat(allCommentForUsername).isEmpty();
         assertThat(allCommentForUsername).isNotNull();
@@ -139,7 +139,7 @@ public class CommentServiceTest {
         //when
         when(commentRepository.getAllByUser(testuser2)).thenReturn(Arrays.asList(someComment, anotherComment));
         when(userRepository.findById(1L)).thenReturn(java.util.Optional.of(testuser2));
-        List<CommentDto> allCommentForUsername = commentService.getAllCommentForUser(testuser2.getUserId());
+        List<CommentDto> allCommentForUsername = commentServiceImpl.getAllCommentsForUser(testuser2.getUserId());
         //then
         assertThat(allCommentForUsername).isNotEmpty();
         assertThat(allCommentForUsername).isNotNull();

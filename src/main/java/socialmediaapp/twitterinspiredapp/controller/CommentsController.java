@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import socialmediaapp.twitterinspiredapp.dto.CommentDto;
 import socialmediaapp.twitterinspiredapp.service.CommentService;
+import socialmediaapp.twitterinspiredapp.service.CommentServiceImpl;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -33,7 +34,7 @@ public class CommentsController {
     @GetMapping("/by-user/{id}")
     public ResponseEntity<List<CommentDto>> getAllCommentsForUser(@PathVariable Long id) {
         return ResponseEntity.ok()
-                .body(commentService.getAllCommentForUser(id));
+                .body(commentService.getAllCommentsForUser(id));
 
     }
 

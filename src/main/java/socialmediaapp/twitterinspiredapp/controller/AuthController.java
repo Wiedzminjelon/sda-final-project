@@ -9,10 +9,8 @@ import socialmediaapp.twitterinspiredapp.dto.RegisterRequest;
 import socialmediaapp.twitterinspiredapp.dto.SignUpResponse;
 import socialmediaapp.twitterinspiredapp.model.LoginRequest;
 import socialmediaapp.twitterinspiredapp.model.User;
-import socialmediaapp.twitterinspiredapp.service.AuthService;
-import socialmediaapp.twitterinspiredapp.service.RefreshTokenService;
+import socialmediaapp.twitterinspiredapp.service.*;
 
-import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 @RestController
@@ -20,44 +18,45 @@ import javax.validation.Valid;
 
 public class AuthController {
 
-    public AuthController(AuthService authService, RefreshTokenService refreshTokenService) {
-        this.authService = authService;
+    private final UserService userService;
+    private final RefreshTokenService refreshTokenService;
+    private final AuthenticationService authenticationService;
+
+    public AuthController(UserService userService, RefreshTokenService refreshTokenService, AuthenticationService authenticationService) {
+        this.userService = userService;
         this.refreshTokenService = refreshTokenService;
+        this.authenticationService = authenticationService;
     }
 
-    private final AuthService authService;
-    private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/signup")
-    public ResponseEntity<SignUpResponse> signup(@RequestBody @Valid RegisterRequest registerRequest) throws MessagingException {
-        authService.signup(registerRequest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<SignUpResponse> signup(@RequestBody @Valid RegisterRequest registerRequest) {
+        return new ResponseEntity<>(userService.signup(registerRequest), HttpStatus.CREATED);
     }
 
     @GetMapping("/accountVerification/{token}")
     public ResponseEntity<String> verifyAccount(@PathVariable String token) {
-        authService.verifyAccount(token);
-        return new ResponseEntity<>("Account activation successfully!", HttpStatus.OK);
+        return new ResponseEntity<>(userService.verifyAccount(token) ? "Account activation successfully!" : "Account activation failed.", HttpStatus.OK);
     }
 
     @PostMapping("/login")
     public AuthenticationResponse login(@RequestBody LoginRequest loginRequest) {
-        return authService.login(loginRequest);
+        return authenticationService.login(loginRequest);
     }
 
     @PostMapping("refresh/token")
     public AuthenticationResponse refreshTokens(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
-        return authService.refreshToken(refreshTokenRequest);
+        return authenticationService.refreshToken(refreshTokenRequest);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout (@Valid @RequestBody RefreshTokenRequest refreshTokenRequest){
-        refreshTokenService.deleterefreshToken(refreshTokenRequest.getRefreshToken());
+    public ResponseEntity<String> logout(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
+        refreshTokenService.deleteRefreshToken(refreshTokenRequest.getRefreshToken());
         return ResponseEntity.status(HttpStatus.OK).body("refresh Token deleted successfully!");
     }
 
     @GetMapping("/user")
-    public User getUser(){
-        return authService.getCurrentUser();
+    public User getUser() {
+        return userService.getCurrentUser();
     }
 }

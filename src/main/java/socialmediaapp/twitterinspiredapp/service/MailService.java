@@ -26,6 +26,7 @@ public class MailService {
 
     @Async
     public void sendEmail(NotificationEmail notificationEmail, boolean isHtmlContent) throws MessagingException {
+
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
         mimeMessageHelper.setTo(notificationEmail.getRecipient());
@@ -33,10 +34,10 @@ public class MailService {
         mimeMessageHelper.setText(notificationEmail.getBody(), isHtmlContent);
         mimeMessageHelper.setFrom("twitterapp@twitterapp.com");
 
-        try{
+        try {
             mailSender.send(mimeMessage);
             log.info("Activation Email sent!");
-        }catch (MailException exception){
+        } catch (MailException exception) {
             throw new SpringTwitterException("Exception occurred when sending an email!");
         }
     }

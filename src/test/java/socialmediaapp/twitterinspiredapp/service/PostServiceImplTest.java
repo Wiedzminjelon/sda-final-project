@@ -19,9 +19,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PostServiceTest {
+public class PostServiceImplTest {
 
-    PostService postService;
+    PostServiceImpl postServiceImpl;
 
     @Mock
     private PostRepository postRepository;
@@ -31,7 +31,7 @@ public class PostServiceTest {
 
     @Before
     public void init() {
-        postService = new PostService(postRepository, userRepository);
+        postServiceImpl = new PostServiceImpl(postRepository, userRepository);
     }
 
     @Test
@@ -39,15 +39,15 @@ public class PostServiceTest {
         //when
         when(postRepository.findAll()).thenReturn(new ArrayList<>());
         //then
-        assertThat(postService.getAllPosts()).isNotNull();
-        assertThat(postService.getAllPosts()).isEmpty();
+        assertThat(postServiceImpl.getAllPosts()).isNotNull();
+        assertThat(postServiceImpl.getAllPosts()).isEmpty();
     }
 
     @Test
     public void when_getAllPosts_then_returnOnePostDto() {
         //when
         when(postRepository.findAll()).thenReturn(Collections.singletonList(new Post()));
-        List<PostDto> posts = postService.getAllPosts();
+        List<PostDto> posts = postServiceImpl.getAllPosts();
         //then
         assertThat(posts).isNotNull();
         assertThat(posts).isNotEmpty();
@@ -67,7 +67,7 @@ public class PostServiceTest {
                 .build();
         //when
         when(postRepository.findAll()).thenReturn(Arrays.asList(post, post2));
-        List<PostDto> posts = postService.getAllPosts();
+        List<PostDto> posts = postServiceImpl.getAllPosts();
         //then
         assertThat(posts).isNotNull();
         assertThat(posts).isNotEmpty();
@@ -88,7 +88,7 @@ public class PostServiceTest {
         //when
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(postRepository.findAllByUser(user)).thenReturn(Collections.singletonList(post));
-        List<PostDto> posts = postService.getAllPostsForUser(user.getUserId());
+        List<PostDto> posts = postServiceImpl.getAllPostsForUser(user.getUserId());
         //then
         assertThat(posts).isNotNull();
         assertThat(posts).isNotEmpty();
@@ -113,8 +113,8 @@ public class PostServiceTest {
         when(userRepository.findById(2L)).thenReturn(Optional.of(user2));
         when(postRepository.findAllByUser(user1)).thenReturn(Arrays.asList(post, post2));
         when(postRepository.findAllByUser(user2)).thenReturn(Collections.singletonList(post3));
-        List<PostDto> postsForUser1 = postService.getAllPostsForUser(user1.getUserId());
-        List<PostDto> postsForUser2 = postService.getAllPostsForUser(user2.getUserId());
+        List<PostDto> postsForUser1 = postServiceImpl.getAllPostsForUser(user1.getUserId());
+        List<PostDto> postsForUser2 = postServiceImpl.getAllPostsForUser(user2.getUserId());
         //then
         assertThat(postsForUser1).isNotNull();
         assertThat(postsForUser2).isNotNull();
@@ -138,8 +138,8 @@ public class PostServiceTest {
                 .url("")
                 .build();
         //when
-        when(postRepository.save(any())).thenReturn(PostService.fromPostDto(postDto));
-        PostDto savedPost = postService.save(postDto);
+        when(postRepository.save(any())).thenReturn(PostServiceImpl.fromPostDto(postDto));
+        PostDto savedPost = postServiceImpl.save(postDto);
         //then
         assertThat(savedPost).isNotNull();
         assertThat(savedPost.getPostName()).isEqualTo("postname");
@@ -156,7 +156,7 @@ public class PostServiceTest {
         post1.setId(1L);
         //when
         when(postRepository.findById(1L)).thenReturn(Optional.of(post1));
-        PostDto foundPost = postService.getPostById(1L);
+        PostDto foundPost = postServiceImpl.getPost(1L);
         //then
         assertThat(foundPost).isNotNull();
         assertThat(foundPost.getId() == 1L);
@@ -168,7 +168,7 @@ public class PostServiceTest {
     public void when_getPostById_then_returnThrowsException() {
         //given
         //when
-        PostDto foundPost = postService.getPostById(1L);
+        PostDto foundPost = postServiceImpl.getPost(1L);
         //then
     }
 
