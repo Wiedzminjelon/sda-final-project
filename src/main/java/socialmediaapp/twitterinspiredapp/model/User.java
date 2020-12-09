@@ -1,6 +1,7 @@
 package socialmediaapp.twitterinspiredapp.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import socialmediaapp.twitterinspiredapp.enums.ACCOUNT_STATUS;
@@ -16,6 +17,7 @@ import java.sql.Timestamp;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class User {
 
     @Id

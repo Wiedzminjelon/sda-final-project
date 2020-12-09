@@ -13,6 +13,7 @@ import socialmediaapp.twitterinspiredapp.repository.VerificationTokenRepository;
 
 import javax.mail.MessagingException;
 import javax.transaction.Transactional;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -45,13 +46,7 @@ public class UserServiceImpl implements UserService {
     public SignUpResponse signup(RegisterRequest registerRequest) {
         validateRegisterRequest(registerRequest);
 
-        User user = new User();
-        user.setUsername(registerRequest.getUsername());
-        user.setEmail(registerRequest.getEmail());
-        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setAccountType(ACCOUNT_TYPE.PRIVATE);
-        user.setCreated(Timestamp.valueOf(LocalDateTime.now()));
-        user.setEnabled(false);
+        User user = createUser(registerRequest);
 
         userRepository.save(user);
         String token = generateVerificationToken(user);
@@ -66,6 +61,8 @@ public class UserServiceImpl implements UserService {
 
         return new SignUpResponse("User registered successfully!");
     }
+
+
 
     public boolean verifyAccount(String token) {
         Optional<VerificationToken> optionalVerificationToken = verificationTokenRepository.findByToken(token);
@@ -119,6 +116,18 @@ public class UserServiceImpl implements UserService {
             throw  new PasswordNotMatchException("Passwords not identical!");
         }
         return true;
+    }
+
+    @NotNull
+    private User createUser(RegisterRequest registerRequest) {
+        User user = new User();
+        user.setUsername(registerRequest.getUsername());
+        user.setEmail(registerRequest.getEmail());
+        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        user.setAccountType(ACCOUNT_TYPE.PRIVATE);
+        user.setCreated(Timestamp.valueOf(LocalDateTime.now()));
+        user.setEnabled(false);
+        return user;
     }
 
 }

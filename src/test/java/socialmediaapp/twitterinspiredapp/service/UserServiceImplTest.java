@@ -1,9 +1,7 @@
 package socialmediaapp.twitterinspiredapp.service;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -12,14 +10,12 @@ import socialmediaapp.twitterinspiredapp.dto.RegisterRequest;
 import socialmediaapp.twitterinspiredapp.dto.SignUpResponse;
 import socialmediaapp.twitterinspiredapp.exceptions.EmailExistsException;
 import socialmediaapp.twitterinspiredapp.exceptions.PasswordNotMatchException;
-import socialmediaapp.twitterinspiredapp.exceptions.SpringTwitterException;
 import socialmediaapp.twitterinspiredapp.exceptions.UsernameExistsException;
 import socialmediaapp.twitterinspiredapp.model.User;
 import socialmediaapp.twitterinspiredapp.model.VerificationToken;
 import socialmediaapp.twitterinspiredapp.repository.UserRepository;
 import socialmediaapp.twitterinspiredapp.repository.VerificationTokenRepository;
 
-import javax.swing.text.html.Option;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -53,6 +49,7 @@ public class UserServiceImplTest {
 
     @Test
     public void when_getCurrentUser_thenReturnUser() {
+
     }
 
     @Test
@@ -70,6 +67,23 @@ public class UserServiceImplTest {
         //then
         assertNotNull(signup);
         assertEquals("User registered successfully!", signup.getResponse());
+    }
+
+    @Test
+    public void when_signup_thenSaveUser() {
+        //given
+        RegisterRequest registerRequest = new RegisterRequest();
+        registerRequest.setUsername("username");
+        registerRequest.setPassword("pass");
+        registerRequest.setConfirmedPassword("pass");
+        registerRequest.setEmail("email@email.com");
+
+        //when
+        SignUpResponse signup = userService.signup(registerRequest);
+
+        //then
+        assertThat(signup.getResponse().equals("User registered successfully!"));
+
     }
 
     @Test(expected = PasswordNotMatchException.class)
@@ -120,13 +134,38 @@ public class UserServiceImplTest {
     }
 
 
-
-
-
     @Test
     public void when_verifyAccount_thenReturnEnabledUser() {
+        //given
+        User user = User.builder()
+                .username("username")
+                .build();
 
+        VerificationToken verificationToken = new VerificationToken();
+        verificationToken.setUser(user);
+        verificationToken.setToken("aaa-bbb");
+
+        //when
+        when(userRepository.findByUsername("username")).thenReturn(Optional.of(user));
+        when(verificationTokenRepository.findByToken("aaa-bbb")).thenReturn(Optional.of(verificationToken));
+        boolean isVerified = userService.verifyAccount(verificationToken.getToken());
+
+        //then
+        assertTrue(isVerified);
     }
+
+    @Test
+    public void when_verifyAccount_thenReturnDisabledUser() {
+        //given
+        User user = new User();
+
+        //when
+        boolean isVerified = userService.verifyAccount(String.valueOf(new VerificationToken()));
+
+        //then
+        assertFalse(isVerified);
+    }
+
 
     @Test
     public void when_getUserById_thenReturnUser() {
