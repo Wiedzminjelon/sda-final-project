@@ -104,7 +104,7 @@ public class UserServiceImpl implements UserService {
 
     private boolean validateRegisterRequest(RegisterRequest registerRequest) {
         if (emailExist(registerRequest.getEmail())) {
-            throw new EmailExistsException("Username or email already exist!");
+            throw new EmailExistsException("Email already in use.");
         }
         if (userExist(registerRequest.getUsername())){
             throw new UsernameExistsException("User with this name already exists.");
