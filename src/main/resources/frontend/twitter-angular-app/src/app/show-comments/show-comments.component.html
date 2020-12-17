@@ -1,0 +1,8 @@
+<div class="container">
+  <div *ngFor="let comment of comments | async">
+    <div class="comment-container">
+      <h3 class="comment-text">{{comment.username}} added a comment: {{comment.text}}</h3>
+      <h3 class="comment-date"> {{comment.created | date: 'yyyy-MM-dd HH:mm:ss'}}</h3>
+    </div>
+  </div>
+</div>

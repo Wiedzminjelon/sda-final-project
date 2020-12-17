@@ -44,4 +44,3 @@ This app was inspired by the work of http://programmingtechie.com/
 
 ## Contact
 If you have any questions, you can just ask me here!
-

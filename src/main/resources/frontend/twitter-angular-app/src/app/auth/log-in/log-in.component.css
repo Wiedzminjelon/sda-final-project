@@ -1,0 +1,35 @@
+input{
+
+  width: 20%;
+  height: 25px;
+  padding: 12px 20px;
+  resize: none;
+  border: solid deepskyblue;
+
+}
+
+div{
+  padding-top: 15px;
+}
+label{
+  display:block;
+  padding-bottom: 10px;
+  padding-top: 15px;
+  font-weight: bold;
+}
+
+button{
+  height: 40px;
+  width: 100px;
+  background-color: dodgerblue;
+  color: azure;
+  border-radius: 5px;
+  margin-top: 15px;
+
+}
+
+
+
+
+
+

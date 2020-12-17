@@ -1,0 +1,85 @@
+header{
+  font-family: 'Montserrat', sans-serif;
+  margin: 0em;
+  padding: 0em;
+  display: flex;
+  justify-content: space-between;
+}
+
+.t-icon{
+  height: 50px;
+  padding: 8px 8px 8px 8px;
+  width: 50px;
+  border-radius: 40%;
+
+}
+
+.logo-text{
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  height: 50px;
+  color: dodgerblue;
+  font-size: 1.6em;
+  display: inline;
+  align-content: flex-end;
+  margin-bottom: 2em;
+  padding: 1em;
+
+
+}
+
+.logo{
+  text-decoration: none;
+}
+
+.login, .signup, .logout{
+  background-color: transparent;
+  border-color: dodgerblue;
+  color: dodgerblue;
+  fill: dodgerblue;
+  border: 1px solid;
+  border-radius: 4px;
+  box-sizing: border-box;
+  text-align: center;
+  letter-spacing: 1px;
+  text-decoration: none;
+  font-size: 1.1em;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 5px 20px;
+  opacity: 1;
+  float: right;
+  margin: 0.1em;
+
+}
+.signup{
+  background-color: dodgerblue;
+  border-color: dodgerblue;
+  color: lightgrey;
+}
+
+.signup:hover{
+  opacity: 0.6;
+}
+
+.logo-text-app{
+  justify-content: flex-start;
+}
+
+.not-logged-in, .logged-in{
+display: contents;
+}
+
+
+
+.not-logged-in-menu, .logged-in-menu{
+  display: flex;
+  justify-content: flex-end;
+  margin: 1em;
+}
+
+.not-logged-in-menu li, .logged-in-menu{
+  list-style-type: none;
+}
+
+

@@ -1,0 +1,11 @@
+<div class="container">
+  <form [formGroup]="newCommentForm" (ngSubmit)="newComment()">
+
+    <div class="create-comment-container">
+      <label for="text" id="comment-text">Add a comment! </label>
+      <input type="text" [formControlName]="'text'" id="text">
+    </div>
+
+    <button type="submit" class="create-comment-button">Comment!</button>
+  </form>
+</div>

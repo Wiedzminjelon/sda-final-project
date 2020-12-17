@@ -1,0 +1,27 @@
+
+
+
+<div class="container">
+
+
+  <form [formGroup]="newPostForm" (ngSubmit)="newPost()">
+    <div>
+      <label for="description">Description:</label> <p></p>
+      <input type="text" [formControlName]="'description'" id="description">
+      <span *ngIf="descriptionValidation('description')">Please enter a description</span>
+    </div>
+
+    <div>
+      <label for="post" class="post">Post:</label><p></p>
+      <textarea type="text" cols="50" rows="5" [formControlName]="'postName'" id="post"></textarea>
+    </div>
+
+    <div>
+      <label for="url">url:</label>
+      <input type="text" [formControlName]="'url'" id="url">
+    </div>
+
+    <button type="submit">Publish!</button>
+
+  </form>
+</div>

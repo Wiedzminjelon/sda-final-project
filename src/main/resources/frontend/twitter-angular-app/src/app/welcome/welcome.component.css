@@ -1,0 +1,24 @@
+p{
+  font-family: 'Montserrat', sans-serif;
+  padding: 15px;
+  vertical-align: middle;
+}
+
+.container{
+background-color: #5bd1e9; 
+display: grid;
+border-radius: 2em;
+}
+
+ul{
+  list-style-type: none;
+}
+
+li{
+  text-align: left;
+}
+
+li p{
+  
+}
+
